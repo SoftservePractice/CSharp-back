@@ -25,7 +25,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("~/[controller]/{id}")]
         public Order GetOrder(int id)
         {
-            return _context.Orders.SingleOrDefault(order => order.Id == id);
+            return _context.Orders.SingleOrDefault(order => order.Id == id)!;
         }
 
         [HttpPost]
@@ -37,20 +37,27 @@ namespace AutoserviceBackCSharp.Controllers
             return newOrder;
         }
 
-        [HttpPatch]
-        public bool UpdateOrder(int id, int client, int technician, DateTime start, DateTime end, int finalPrice, int car, int carMieleage, DateTime appointmentTime)
+        [HttpPatch("~/[controller]/{id}")]
+        public bool UpdateOrder(int id, int? client, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
             var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
-            updOrder.Client = client;
-            updOrder.Technician = technician;
-            updOrder.Start = DateOnly.FromDateTime(start);
-            updOrder.End = DateOnly.FromDateTime(end);
-            updOrder.FinalPrice = finalPrice;
-            updOrder.Car = car;
-            updOrder.CarMileage = carMieleage;
-            updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime);
-            _context.SaveChanges();
-            return true;
+            if(updOrder != null)
+            {
+                updOrder.Client = client ?? updOrder.Client;
+                updOrder.Technician = technician ?? updOrder.Technician;
+                updOrder.FinalPrice = finalPrice ?? updOrder.FinalPrice;
+                updOrder.Car = car ?? updOrder.Car;
+                updOrder.CarMileage = carMieleage ?? updOrder.CarMileage;
+                if (start.HasValue)
+                    updOrder.Start = DateOnly.FromDateTime(start.Value);
+                if (end.HasValue)
+                    updOrder.End = DateOnly.FromDateTime(end.Value);
+                if(appointmentTime.HasValue)
+                    updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         [HttpDelete("~/[controller]/{id}")]

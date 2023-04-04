@@ -41,7 +41,7 @@ namespace AutoserviceBackCSharp.Controllers
             return client;
         }
         
-        [HttpPatch]
+        [HttpPatch("~/[controller]/{id}")]
         public bool UpdateClient(int id, string? name, string? phone, string? email, string? telegramId)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);

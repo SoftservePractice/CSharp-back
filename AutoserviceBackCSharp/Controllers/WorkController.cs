@@ -27,7 +27,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("~/[controller]/{id}")]
         public Work GetWork(int id)
         {
-            return _context.Works.SingleOrDefault(work => work.Id == id);
+            return _context.Works.SingleOrDefault(work => work.Id == id)!;
         }
 
         [HttpPost]
@@ -39,7 +39,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newWork;
         }
 
-        [HttpPatch]
+        [HttpPatch("~/[controller]/{id}")]
         public bool UpdateWork(int id, int detail, float detailPrice, float workPrice, int order)
         {
             var updWork = _context.Works.SingleOrDefault(work => work.Id == id);
