@@ -21,7 +21,7 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.Orders;
         }
-        //[HttpGet("~/{id}")]
+
         [HttpGet("~/[controller]/{id}")]
         public Order GetOrder(int id)
         {
