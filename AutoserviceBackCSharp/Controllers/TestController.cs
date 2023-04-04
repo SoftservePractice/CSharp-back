@@ -27,7 +27,6 @@ namespace AutoserviceBackCSharp.Controllers
             return _context.Cars;
         }
 
-        //[HttpGet("~/{id}")]
         [HttpGet("~/[controller]/{id}")]
         public Car GetCar(int id)
         {
@@ -56,7 +55,7 @@ namespace AutoserviceBackCSharp.Controllers
             return true;
         }
 
-        [HttpDelete]
+        [HttpDelete("~/[controller]/{id}")]
         public bool DeleteCar(int id)
         {
             _context.Remove(new Car() { Id = id });
