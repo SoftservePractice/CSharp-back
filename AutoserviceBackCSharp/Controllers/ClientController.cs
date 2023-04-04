@@ -53,7 +53,6 @@ namespace AutoserviceBackCSharp.Controllers
                 client.Email = email ?? client.Email;
                 client.TelegramId = telegramId ?? client.TelegramId;
                 _context.SaveChanges();
-
                 return true;
             }
 

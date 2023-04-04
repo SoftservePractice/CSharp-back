@@ -49,11 +49,17 @@ namespace AutoserviceBackCSharp.Controllers
                 updOrder.Car = car ?? updOrder.Car;
                 updOrder.CarMileage = carMieleage ?? updOrder.CarMileage;
                 if (start.HasValue)
+                {
                     updOrder.Start = DateOnly.FromDateTime(start.Value);
+                }
                 if (end.HasValue)
+                {
                     updOrder.End = DateOnly.FromDateTime(end.Value);
+                }
                 if(appointmentTime.HasValue)
+                {
                     updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+                }
                 _context.SaveChanges();
                 return true;
             }

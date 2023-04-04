@@ -30,7 +30,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("~/[controller]/{id}")]
         public Car GetCar(int id)
         {
-            return _context.Cars.SingleOrDefault(car => car.Id == id);
+            return _context.Cars.SingleOrDefault(car => car.Id == id)!;
         }
 
         [HttpPost]
@@ -42,17 +42,24 @@ namespace AutoserviceBackCSharp.Controllers
             return newCar;
         }
 
-        [HttpPatch]
-        public bool UpdateCar(int id, string mark, DateTime year, string vin, string carNumber, int clientId)
+        [HttpPatch("~/[controller]/{id}")]
+        public bool UpdateCar(int id, string? mark, DateTime? year, string? vin, string? carNumber, int? clientId)
         {
             var updCar = _context.Cars.SingleOrDefault(car => car.Id == id);
-            updCar.Mark = mark;
-            updCar.Year = DateOnly.FromDateTime(year);
-            updCar.Vin = vin;
-            updCar.CarNumber = carNumber;
-            updCar.Client = clientId;
-            _context.SaveChanges();
-            return true;
+            if(updCar != null)
+            {
+                updCar.Mark = mark ?? updCar.Mark;
+                updCar.Vin = vin ?? updCar.Vin;
+                updCar.CarNumber = carNumber ?? updCar.CarNumber;
+                updCar.Client = clientId ?? updCar.Client;
+                if(year.HasValue)
+                {
+                    updCar.Year = DateOnly.FromDateTime(year.Value);
+                }
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         [HttpDelete("~/[controller]/{id}")]

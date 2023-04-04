@@ -40,15 +40,19 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPatch("~/[controller]/{id}")]
-        public bool UpdateWork(int id, int detail, float detailPrice, float workPrice, int order)
+        public bool UpdateWork(int id, int? detail, float? detailPrice, float? workPrice, int? order)
         {
             var updWork = _context.Works.SingleOrDefault(work => work.Id == id);
-            updWork.Detail = detail;
-            updWork.DetailPrice = detailPrice;
-            updWork.WorkPrice = workPrice;
-            updWork.Order = order;
-            _context.SaveChanges();
-            return true;
+            if(updWork != null)
+            {
+                updWork.Detail = detail ?? updWork.Detail;
+                updWork.DetailPrice = detailPrice ?? updWork.DetailPrice;
+                updWork.WorkPrice = workPrice ?? updWork.WorkPrice;
+                updWork.Order = order ?? updWork.Order;
+                _context.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
         [HttpDelete("~/[controller]/{id}")]
