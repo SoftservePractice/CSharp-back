@@ -29,26 +29,26 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Order PostOrder(int client, int technician, DateOnly start, DateOnly end, int finalPrice, int car, int carMieleage, DateOnly appointmentTime)
+        public Order PostOrder(int client, int technician, DateTime start, DateTime end, int finalPrice, int car, int carMieleage, DateTime appointmentTime)
         {
-            var newOrder = new Order() { Client = client, Technician = technician, Start = start, End = end, FinalPrice = finalPrice, Car = car,CarMileage= carMieleage, AppointmentTime=appointmentTime};
+            var newOrder = new Order() { Client = client, Technician = technician, Start = DateOnly.FromDateTime(start), End = DateOnly.FromDateTime(end), FinalPrice = finalPrice, Car = car,CarMileage= carMieleage, AppointmentTime= DateOnly.FromDateTime(appointmentTime) };
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
             return newOrder;
         }
 
         [HttpPatch]
-        public bool UpdateOrder(int id, int client, int technician, DateOnly start, DateOnly end, int finalPrice, int car, int carMieleage, DateOnly appointmentTime)
+        public bool UpdateOrder(int id, int client, int technician, DateTime start, DateTime end, int finalPrice, int car, int carMieleage, DateTime appointmentTime)
         {
             var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
             updOrder.Client = client;
             updOrder.Technician = technician;
-            updOrder.Start = start;
-            updOrder.End = end;
+            updOrder.Start = DateOnly.FromDateTime(start);
+            updOrder.End = DateOnly.FromDateTime(end);
             updOrder.FinalPrice = finalPrice;
             updOrder.Car = car;
             updOrder.CarMileage = carMieleage;
-            updOrder.AppointmentTime = appointmentTime;
+            updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime);
             _context.SaveChanges();
             return true;
         }
