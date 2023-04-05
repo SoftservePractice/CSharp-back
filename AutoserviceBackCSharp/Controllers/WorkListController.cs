@@ -21,7 +21,7 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.WorkLists.Where(
                 workList =>
-		    (name == null || workList.Name == name)
+		            (name == null || workList.Name == name)
                     && (description == null || workList.Description == description)
                     && (price == null || workList.Price == price)
                     && (duration == null || workList.Duration == duration)
@@ -42,6 +42,7 @@ namespace AutoserviceBackCSharp.Controllers
             _context.SaveChanges();
             return workList;
         }
+
         [HttpPatch("~/[controller]/{id}")]
         public bool UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
         {
@@ -61,9 +62,16 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteWorkList(int id)
         {
-            _context.Remove(new WorkList { Id = id });
-            _context.SaveChanges();
-            return true;
+            var worklist = _context.WorkLists.SingleOrDefault(worklist => worklist.Id == (uint)id);
+
+            if (worklist != null)
+            {
+                _context.Remove(worklist);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }

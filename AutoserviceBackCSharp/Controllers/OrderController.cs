@@ -10,6 +10,7 @@ namespace AutoserviceBackCSharp.Controllers
     {
         private readonly ILogger<OrderController> _logger;
         private readonly PracticedbContext _context;
+
         public OrderController(ILogger<OrderController> logger, PracticedbContext context)
         {
             _logger = logger;
@@ -21,7 +22,6 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.Orders;
         }
-
         [HttpGet("~/[controller]/{id}")]
         public Order GetOrder(int id)
         {
@@ -69,9 +69,16 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteOrder(int id)
         {
-            _context.Remove(new Order() { Id = id });
-            _context.SaveChanges();
-            return true;
+            var order = _context.Orders.SingleOrDefault(order => order.Id == id);
+
+            if (order != null)
+            {
+                _context.Remove(order);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }

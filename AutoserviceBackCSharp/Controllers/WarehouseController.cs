@@ -54,9 +54,16 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteWarehouse(int id)
         {
-            _context.Remove(new Warehouse() { Id = id });
-            _context.SaveChanges();
-            return true;
+            var warehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
+
+            if (warehouse != null)
+            {
+                _context.Remove(warehouse);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }
