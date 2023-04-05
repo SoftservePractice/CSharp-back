@@ -16,21 +16,16 @@ namespace AutoserviceBackCSharp.Controllers
             _context = context;
         }
 
-
-        [HttpGet]
-        public IEnumerable<Car> GetCars(int? clientId)
-        {
-            if(clientId.HasValue)
-            {
-                return _context.Cars.Where(car => car.Client == clientId.Value);
-            }
-            return _context.Cars;
-        }
-
         [HttpGet("~/[controller]/{id}")]
         public Car GetCar(int id)
         {
             return _context.Cars.SingleOrDefault(car => car.Id == id)!;
+        }
+
+        [HttpGet]
+        public IEnumerable<Car> GetCars()
+        {
+            return _context.Cars;
         }
 
         [HttpPost]
@@ -65,9 +60,16 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteCar(int id)
         {
-            _context.Remove(new Car() { Id = id });
-            _context.SaveChanges();
-            return true;
+            var car = _context.Cars.SingleOrDefault(car => car.Id == id);
+
+            if (car != null)
+            {
+                _context.Remove(car);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }

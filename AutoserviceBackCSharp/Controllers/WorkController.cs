@@ -8,15 +8,14 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class WorkController : ControllerBase
     {
-
         private readonly ILogger<WorkController> _logger;
         private readonly PracticedbContext _context;
+
         public WorkController(ILogger<WorkController> logger, PracticedbContext context)
         {
             _logger = logger;
             _context = context;
         }
-
 
         [HttpGet]
         public IEnumerable<Work> GetWorks()
@@ -58,9 +57,16 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteWork(int id)
         {
-            _context.Remove(new Work() { Id = id });
-            _context.SaveChanges();
-            return true;
+            var work = _context.Works.SingleOrDefault(work => work.Id == id);
+
+            if (work != null)
+            {
+                _context.Remove(work);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }
