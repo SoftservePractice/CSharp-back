@@ -23,8 +23,8 @@ namespace AutoserviceBackCSharp.Controllers
                 workList =>
 		    (name == null || workList.Name == name)
                     && (description == null || workList.Description == description)
-                    && (price == null || workList.Price == price.ToString())
-                    && (duration == null || workList.Duration == duration.ToString())
+                    && (price == null || workList.Price == price)
+                    && (duration == null || workList.Duration == duration)
             )!;
         }
 
@@ -37,7 +37,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public WorkList PostWorkList(string name, string description, float price, float duration)
         {
-	        var workList = new WorkList() { Name = name, Description = description, Price = price.ToString(), Duration = duration.ToString() };
+	        var workList = new WorkList() { Name = name, Description = description, Price = price, Duration = duration };
             _context.WorkLists.Add(workList);
             _context.SaveChanges();
             return workList;
@@ -51,8 +51,8 @@ namespace AutoserviceBackCSharp.Controllers
             {
             	updWorkList.Name = name ?? updWorkList.Name;
             	updWorkList.Description = description ?? updWorkList.Description;
-            	updWorkList.Price = price.ToString() ?? updWorkList.Price;//change
-            	updWorkList.Duration = duration.ToString() ?? updWorkList.Duration;//change
+            	updWorkList.Price = price ?? updWorkList.Price;//change
+            	updWorkList.Duration = duration ?? updWorkList.Duration;//change
                 _context.SaveChanges();
             	return true;
 	        }
@@ -62,7 +62,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteWorkList(int id)
         {
-            _context.Remove(new WorkList { Id = (uint)id });
+            _context.Remove(new WorkList { Id = id });
             _context.SaveChanges();
             return true;
         }
