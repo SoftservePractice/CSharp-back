@@ -1,9 +1,5 @@
+using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -12,50 +8,60 @@ namespace AutoserviceBackCSharp.Controllers
     public class WorkListController : ControllerBase
     {
         private readonly ILogger<WorkListController> _logger;
-        private readonly MyDbContext _context;
+        private readonly PracticedbContext _context;
 
-        public WorkListController(ILogger<WorkListController> logger, MyDbContext context)
+        public WorkListController(ILogger<WorkListController> logger, PracticedbContext context)
         {
             _logger = logger;
             _context = context;
         }
 
         [HttpGet]
-        public IEnumerable<WorkList> GetWorkLists()
+        public IEnumerable<WorkList> GetWorkLists(string? name, string? description, float? price, float? duration)
         {
-            return _context.WorkLists.ToList();
+            return _context.WorkLists.Where(
+                workList =>
+		    (name == null || workList.Name == name)
+                    && (description == null || workList.Description == description)
+                    && (price == null || workList.Price == price)
+                    && (duration == null || workList.Duration == duration)
+            )!;
         }
 
-        [HttpGet("{id}")]
-        public WorkList GetWorkList(uint id)
+        [HttpGet("~/[controller]/{id}")]
+        public WorkList GetWorkList(int id)
         {
-            return _context.WorkLists.SingleOrDefault(workList => workList.Id == id);
+            return _context.WorkLists.SingleOrDefault(workList => workList.Id == id)!;
         }
 
         [HttpPost]
-        public WorkList PostWorkList([FromBody] WorkList workList)
+        public WorkList PostWorkList(string name, string description, float price, float duration)
         {
+	        var workList = new WorkList() { Name = name, Description = description, Price = price, Duration = duration };
             _context.WorkLists.Add(workList);
             _context.SaveChanges();
             return workList;
         }
-
-        [HttpPut("{id}")]
-        public bool UpdateWorkList(uint id, [FromBody] WorkList workList)
+        [HttpPatch("~/[controller]/{id}")]
+        public bool UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
         {
             var updWorkList = _context.WorkLists.SingleOrDefault(wl => wl.Id == id);
-            updWorkList.Name = workList.Name;
-            updWorkList.Description = workList.Description;
-            updWorkList.Price = workList.Price;
-            updWorkList.Duration = workList.Duration;
-            _context.SaveChanges();
-            return true;
+	        if(updWorkList != null)
+            {
+            	updWorkList.Name = name ?? updWorkList.Name;
+            	updWorkList.Description = description ?? updWorkList.Description;
+            	updWorkList.Price = price ?? updWorkList.Price;//change
+            	updWorkList.Duration = duration ?? updWorkList.Duration;//change
+                _context.SaveChanges();
+            	return true;
+	        }
+	        return false;
         }
 
-        [HttpDelete("{id}")]
-        public bool DeleteWorkList(uint id)
+        [HttpDelete("~/[controller]/{id}")]
+        public bool DeleteWorkList(int id)
         {
-            _context.WorkLists.Remove(new WorkList { Id = id });
+            _context.Remove(new WorkList { Id = id });
             _context.SaveChanges();
             return true;
         }
