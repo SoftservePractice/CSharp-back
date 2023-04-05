@@ -51,8 +51,8 @@ namespace AutoserviceBackCSharp.Controllers
             {
             	updWorkList.Name = name ?? updWorkList.Name;
             	updWorkList.Description = description ?? updWorkList.Description;
-            	updWorkList.Price = price ?? updWorkList.Price;//change
-            	updWorkList.Duration = duration ?? updWorkList.Duration;//change
+            	updWorkList.Price = price ?? updWorkList.Price;
+            	updWorkList.Duration = duration ?? updWorkList.Duration;
                 _context.SaveChanges();
             	return true;
 	        }
@@ -62,7 +62,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpDelete("~/[controller]/{id}")]
         public bool DeleteWorkList(int id)
         {
-            var worklist = _context.WorkLists.SingleOrDefault(worklist => worklist.Id == (uint)id);
+            var worklist = _context.WorkLists.SingleOrDefault(worklist => worklist.Id == id);
 
             if (worklist != null)
             {
