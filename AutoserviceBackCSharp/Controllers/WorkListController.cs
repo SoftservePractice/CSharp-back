@@ -42,7 +42,6 @@ namespace AutoserviceBackCSharp.Controllers
             _context.SaveChanges();
             return workList;
         }
-
         [HttpPatch("~/[controller]/{id}")]
         public bool UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
         {
