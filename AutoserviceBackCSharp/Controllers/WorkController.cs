@@ -23,7 +23,7 @@ namespace AutoserviceBackCSharp.Controllers
             return _context.Works;
         }
 
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Work GetWork(int id)
         {
             return _context.Works.SingleOrDefault(work => work.Id == id)!;
@@ -38,7 +38,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newWork;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateWork(int id, int? detail, float? detailPrice, float? workPrice, int? order)
         {
             var updWork = _context.Works.SingleOrDefault(work => work.Id == id);
@@ -54,7 +54,7 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteWork(int id)
         {
             var work = _context.Works.SingleOrDefault(work => work.Id == id);

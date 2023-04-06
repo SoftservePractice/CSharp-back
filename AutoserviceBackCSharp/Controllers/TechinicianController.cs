@@ -22,7 +22,7 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.Technicians;
         }
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Technician GetTechnician(int id)
         {
             return _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
@@ -37,7 +37,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newTechnician;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateTechnician(int id, string? name, string? phone, string? specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
@@ -61,7 +61,7 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteTechnician(int id)
         {
             var technician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);

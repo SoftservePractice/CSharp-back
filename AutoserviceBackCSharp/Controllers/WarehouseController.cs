@@ -24,7 +24,7 @@ namespace AutoserviceBackCSharp.Controllers
             return _context.Warehouses;
         }
 
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Warehouse GetWarehouse(int id)
         {
             return _context.Warehouses.SingleOrDefault(car => car.Id == id)!;
@@ -39,7 +39,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newWarehouse;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateWarehouse(int id, string? adress, string? name)
         {
             var updWarehouse = _context.Warehouses.SingleOrDefault(Warehouse => Warehouse.Id == id);
@@ -53,7 +53,7 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteWarehouse(int id)
         {
             var warehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);

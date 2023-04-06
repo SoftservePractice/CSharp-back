@@ -22,7 +22,7 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.Orders;
         }
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Order GetOrder(int id)
         {
             return _context.Orders.SingleOrDefault(order => order.Id == id)!;
@@ -49,7 +49,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newOrder;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateOrder(int id, int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
             var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
@@ -78,7 +78,7 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteOrder(int id)
         {
             var order = _context.Orders.SingleOrDefault(order => order.Id == id);
