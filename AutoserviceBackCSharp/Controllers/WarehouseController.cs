@@ -1,10 +1,13 @@
 ﻿using AutoserviceBackCSharp.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoserviceBackCSharp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [DisableCors]
+
     public class WarehouseController : ControllerBase
     {
         private readonly ILogger<CarController> _logger;
@@ -15,7 +18,6 @@ namespace AutoserviceBackCSharp.Controllers
             _logger = logger;
             _context = context;
         }
-
         [HttpGet]
         public IEnumerable<Warehouse> GetWarehouses()
         {
