@@ -15,7 +15,7 @@ builder.Services.AddMvc().AddJsonOptions(o => {
 });
 builder.Services.AddDbContext<AutoserviceBackCSharp.Models.PracticedbContext>();
 builder.Services.AddSingleton(_ => new AutoserviceBackCSharp.Singletone.DbConnection(builder.Configuration.GetConnectionString("Default")));
-
+builder.Services.AddCors(opt => opt.AddPolicy("MyPolicy", b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
