@@ -27,7 +27,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("{id}")]
         public Warehouse GetWarehouse(int id)
         {
-            return _context.Warehouses.SingleOrDefault(car => car.Id == id)!;
+            return _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id)!;
         }
 
         [HttpPost]
@@ -42,7 +42,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPatch("{id}")]
         public bool UpdateWarehouse(int id, string? adress, string? name)
         {
-            var updWarehouse = _context.Warehouses.SingleOrDefault(Warehouse => Warehouse.Id == id);
+            var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
             if(updWarehouse != null)
             {
                 updWarehouse.Address = adress ?? updWarehouse.Address;
