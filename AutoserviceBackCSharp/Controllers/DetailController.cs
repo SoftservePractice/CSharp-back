@@ -18,9 +18,12 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Detail> GetDetails()
+        public IEnumerable<Detail> GetDetails(int? catId)
         {
-            return _context.Details;
+            return _context.Details.Where(
+                detail =>
+                    (catId == null || detail.Category == catId)
+            )!;
         }
         [HttpGet("{id}")]
         public Detail GetDetail(int id)
@@ -29,12 +32,12 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Detail PostDetail(string model, string vendorCode, string description, string compatibleVehicles)
+        public Detail PostDetail(string model, string vendorCode, string? description, string compatibleVehicles)
         {
             var newDetail = new Detail() { 
                 Model = model, 
                 VendorCode = vendorCode, 
-                Description = description, 
+                Description = description ?? "", 
                 CompatibleVehicles = compatibleVehicles
             };
             _context.Details.Add(newDetail);

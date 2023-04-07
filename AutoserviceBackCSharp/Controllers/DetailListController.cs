@@ -34,23 +34,23 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public DetailList PostDetailList(int warehouseId, int detailId, int count)
+        public DetailList PostDetailList(int warehouseId, int detailId, int? count)
         {
-            var newDetailList = new DetailList() { Warehouse = warehouseId, Detail = detailId, Count = count };
+            var newDetailList = new DetailList() { Warehouse = warehouseId, Detail = detailId, Count = count ?? 0 };
             _context.DetailLists.Add(newDetailList);
             _context.SaveChanges();
             return newDetailList;
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateDetailList(int id, int warehouseId, int detailId, int count)
+        public bool UpdateDetailList(int id, int? warehouseId, int? detailId, int? count)
         {
             var updDetailList = _context.DetailLists.SingleOrDefault(detailList => detailList.Id == id);
             if (updDetailList != null)
             {
-                updDetailList.Warehouse = warehouseId;
-                updDetailList.Detail = detailId;
-                updDetailList.Count = count;
+                updDetailList.Warehouse = warehouseId ?? updDetailList.Warehouse;
+                updDetailList.Detail = detailId ?? updDetailList.Detail;
+                updDetailList.Count = count ?? updDetailList.Count;
                 _context.SaveChanges();
                 return true;
             }
