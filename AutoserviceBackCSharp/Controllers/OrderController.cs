@@ -22,28 +22,40 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.Orders;
         }
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Order GetOrder(int id)
         {
             return _context.Orders.SingleOrDefault(order => order.Id == id)!;
         }
 
         [HttpPost]
-        public Order PostOrder(int client, int technician, DateTime start, DateTime end, int finalPrice, int car, int carMieleage, DateTime appointmentTime)
+        public Order PostOrder(int clientId, int? technician, DateTime start, DateTime? end, int? finalPrice, int car, int carMieleage, DateTime appointmentTime)
         {
-            var newOrder = new Order() { Client = client, Technician = technician, Start = DateOnly.FromDateTime(start), End = DateOnly.FromDateTime(end), FinalPrice = finalPrice, Car = car,CarMileage= carMieleage, AppointmentTime= DateOnly.FromDateTime(appointmentTime) };
+            var newOrder = new Order() { 
+                Client = clientId, 
+                Technician = technician, 
+                Start = DateOnly.FromDateTime(start), 
+                FinalPrice = finalPrice, 
+                Car = car,
+                CarMileage= carMieleage, 
+                AppointmentTime= DateOnly.FromDateTime(appointmentTime) 
+            };
+            if(end.HasValue)
+            {
+                newOrder.End = DateOnly.FromDateTime(end.Value);
+            }
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
             return newOrder;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
-        public bool UpdateOrder(int id, int? client, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
+        [HttpPatch("{id}")]
+        public bool UpdateOrder(int id, int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
             var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
             if(updOrder != null)
             {
-                updOrder.Client = client ?? updOrder.Client;
+                updOrder.Client = clientId ?? updOrder.Client;
                 updOrder.Technician = technician ?? updOrder.Technician;
                 updOrder.FinalPrice = finalPrice ?? updOrder.FinalPrice;
                 updOrder.Car = car ?? updOrder.Car;
@@ -66,7 +78,7 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteOrder(int id)
         {
             var order = _context.Orders.SingleOrDefault(order => order.Id == id);
