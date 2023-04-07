@@ -17,28 +17,38 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Client> GetClients(string? name, string? phone, string? email, string? telegramId)
+        public IActionResult GetClients(string? name,string? phone,string? email,string? telegramId)
         {
-            return _context.Clients.Where(
+            var clients = _context.Clients.Where(
                 client =>
                     (name == null || client.Name == name)
                     && (phone == null || client.Phone == phone)
                     && (email == null || client.Email == email)
                     && (telegramId == null || client.TelegramId == telegramId)
             )!;
+
+            return Ok(clients);
         }
 
         [HttpGet("{id}")]
-        public Client GetClient(int id)
+        public IActionResult GetClient(int id)
         {
-            return _context.Clients.SingleOrDefault(client => client.Id == id)!;
+            var client = _context.Clients.SingleOrDefault(client => client.Id == id);
+            if(client == null) 
+            {
+                return NotFound(new {message = "Пользователь не найден"});
+            }
+            return Ok(client);
         }
 
         [HttpPost]
-        public IActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
+        public IActionResult PostClient(string? name,string? phone,string? email,string? telegramId)
         {
-            if((name == null || name.Length == 0) || (phone == null || phone.Length == 0)){
-                return BadRequest(new { message = "Имя или номер пользователя не могут быть пустыми" });
+            if ((name == null || name.Length == 0) || (phone == null || phone.Length == 0))
+            {
+                return BadRequest(
+                    new { message = "Имя или номер пользователя не могут быть пустыми" }
+                );
             }
 
             var client = new Client()
@@ -52,16 +62,12 @@ namespace AutoserviceBackCSharp.Controllers
             _context.Clients.Add(client);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(PostClient), client);
+            return CreatedAtAction(nameof(PostClient), new {client = client, message = "Пользователь успешно создан"});
         }
 
         [HttpPatch("{id}")]
-        public IActionResult UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
+        public IActionResult UpdateClient(int id,string? name,string? phone,string? email,string? telegramId,bool? isConfirm)
         {
-            if((name == null || name.Length == 0) || (phone == null || phone.Length == 0)){
-                return BadRequest(new { message = "Имя или номер пользователя не могут быть пустыми" });
-            }
-
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
             if (client != null)
@@ -72,14 +78,14 @@ namespace AutoserviceBackCSharp.Controllers
                 client.TelegramId = telegramId ?? client.TelegramId;
                 client.IsConfirm = isConfirm ?? client.IsConfirm;
                 _context.SaveChanges();
-                return Ok();
+                return Ok(new {client = client, message = "Пользователь успешно обновлен"});
             }
 
-            return NotFound();
+            return NotFound(new {message = "Пользователь не найден"});
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteClient(int id)
+        public IActionResult DeleteClient(int id)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
@@ -87,10 +93,10 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(client);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Пользователь успешно удален" });
             }
 
-            return false;
+            return NotFound(new {message = "Пользователь не найден"});
         }
     }
 }
