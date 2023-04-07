@@ -35,12 +35,12 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Client PostClient(string name, string phone, string? email, string? telegramId)
+        public Client PostClient(string? name, string? phone, string? email, string? telegramId)
         {
             var client = new Client()
             {
-                Name = name,
-                Phone = phone,
+                Name = name ?? "",
+                Phone = phone ?? "",
                 Email = email ?? null,
                 TelegramId = telegramId ?? null,
                 IsConfirm = false
@@ -51,7 +51,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateClient(int id, string? name, string? phone, string? email, string? telegramId)
+        public bool UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
@@ -61,6 +61,7 @@ namespace AutoserviceBackCSharp.Controllers
                 client.Phone = phone ?? client.Phone;
                 client.Email = email ?? client.Email;
                 client.TelegramId = telegramId ?? client.TelegramId;
+                client.IsConfirm = isConfirm ?? client.IsConfirm;
                 _context.SaveChanges();
                 return true;
             }
