@@ -35,8 +35,12 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Client PostClient(string? name, string? phone, string? email, string? telegramId)
+        public IActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
+            if((name == null || name.Length == 0) || (phone == null || phone.Length == 0)){
+                return BadRequest(new { message = "Имя или номер пользователя не могут быть пустыми" });
+            }
+
             var client = new Client()
             {
                 Name = name ?? "",
@@ -47,12 +51,17 @@ namespace AutoserviceBackCSharp.Controllers
             };
             _context.Clients.Add(client);
             _context.SaveChanges();
-            return client;
+
+            return CreatedAtAction(nameof(PostClient), client);
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
+        public IActionResult UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
+            if((name == null || name.Length == 0) || (phone == null || phone.Length == 0)){
+                return BadRequest(new { message = "Имя или номер пользователя не могут быть пустыми" });
+            }
+
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
             if (client != null)
@@ -63,10 +72,10 @@ namespace AutoserviceBackCSharp.Controllers
                 client.TelegramId = telegramId ?? client.TelegramId;
                 client.IsConfirm = isConfirm ?? client.IsConfirm;
                 _context.SaveChanges();
-                return true;
+                return Ok();
             }
 
-            return false;
+            return NotFound();
         }
 
         [HttpDelete("{id}")]
