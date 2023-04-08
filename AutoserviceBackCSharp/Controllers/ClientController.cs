@@ -62,8 +62,8 @@ namespace AutoserviceBackCSharp.Controllers
 
             var client = new Client()
             {
-                Name = name ?? "",
-                Phone = phone ?? "",
+                Name = name ?? null,
+                Phone = phone ?? null,
                 Email = email ?? null,
                 TelegramId = telegramId ?? null,
                 IsConfirm = false
