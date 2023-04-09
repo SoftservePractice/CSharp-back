@@ -48,7 +48,7 @@ namespace AutoserviceBackCSharp.Controllers
             }
             if (!validator.IsValid(adress))
             {
-                return BadRequest("Address can only contain letters, numbers, spaces and commas");
+                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
             }
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
@@ -62,9 +62,7 @@ namespace AutoserviceBackCSharp.Controllers
             var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
             if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
             {
-                return BadRequest(
-                    new { message = "Имя и адресс склада не могут быть пустыми"}
-                    );
+                return BadRequest("Имя и адресс склада не могут быть пустыми");
             }
             if (validator.IsValid(adress) == false)
             {
@@ -72,7 +70,7 @@ namespace AutoserviceBackCSharp.Controllers
             }
             if (!validator.IsValid(adress))
             {
-                return BadRequest("Address can only contain letters, numbers, spaces and commas");
+                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
             }
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
             if(updWarehouse != null)
