@@ -99,3 +99,26 @@ namespace AutoserviceBackCSharp.Controllers
             { 
                 updDetailList.Warehouse = warehouseId ?? updDetailList.Warehouse; 
                 updDetailList.Detail = detailId ?? updDetailList.Detail;
+		updDetailList.Count = count ?? updDetailList.Count; 
+                _context.SaveChanges(); 
+                return updDetailList; 
+            } 
+            return NotFound(); 
+        } 
+ 
+        [HttpDelete("{id}")] 
+        public bool DeleteDetailList(int id) 
+        { 
+            var detailList = _context.DetailLists.SingleOrDefault(detailList => detailList.Id == id); 
+ 
+            if (detailList != null) 
+            { 
+                _context.Remove(detailList); 
+                _context.SaveChanges(); 
+                return true; 
+            } 
+ 
+            return false; 
+        } 
+    } 
+}
