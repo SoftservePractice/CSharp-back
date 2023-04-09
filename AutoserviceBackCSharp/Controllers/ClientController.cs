@@ -35,12 +35,12 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Client PostClient(string name, string phone, string? email, string? telegramId)
+        public Client PostClient(string? name, string? phone, string? email, string? telegramId)
         {
             var client = new Client()
             {
-                Name = name,
-                Phone = phone,
+                Name = name ?? null,
+                Phone = phone ?? null,
                 Email = email ?? null,
                 TelegramId = telegramId ?? null,
                 IsConfirm = false
