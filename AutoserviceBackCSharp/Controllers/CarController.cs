@@ -16,21 +16,16 @@ namespace AutoserviceBackCSharp.Controllers
             _context = context;
         }
 
-
-        [HttpGet]
-        public IEnumerable<Car> GetCars(int? clientId)
-        {
-            if(clientId.HasValue)
-            {
-                return _context.Cars.Where(car => car.Client == clientId.Value);
-            }
-            return _context.Cars;
-        }
-
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Car GetCar(int id)
         {
             return _context.Cars.SingleOrDefault(car => car.Id == id)!;
+        }
+
+        [HttpGet]
+        public IEnumerable<Car> GetCars()
+        {
+            return _context.Cars;
         }
 
         [HttpPost]
@@ -42,7 +37,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newCar;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateCar(int id, string? mark, DateTime? year, string? vin, string? carNumber, int? clientId)
         {
             var updCar = _context.Cars.SingleOrDefault(car => car.Id == id);
@@ -62,12 +57,19 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteCar(int id)
         {
-            _context.Remove(new Car() { Id = id });
-            _context.SaveChanges();
-            return true;
+            var car = _context.Cars.SingleOrDefault(car => car.Id == id);
+
+            if (car != null)
+            {
+                _context.Remove(car);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }

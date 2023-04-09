@@ -8,15 +8,14 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class WorkController : ControllerBase
     {
-
         private readonly ILogger<WorkController> _logger;
         private readonly PracticedbContext _context;
+
         public WorkController(ILogger<WorkController> logger, PracticedbContext context)
         {
             _logger = logger;
             _context = context;
         }
-
 
         [HttpGet]
         public IEnumerable<Work> GetWorks()
@@ -24,7 +23,7 @@ namespace AutoserviceBackCSharp.Controllers
             return _context.Works;
         }
 
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Work GetWork(int id)
         {
             return _context.Works.SingleOrDefault(work => work.Id == id)!;
@@ -39,7 +38,7 @@ namespace AutoserviceBackCSharp.Controllers
             return newWork;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateWork(int id, int? detail, float? detailPrice, float? workPrice, int? order)
         {
             var updWork = _context.Works.SingleOrDefault(work => work.Id == id);
@@ -55,12 +54,19 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteWork(int id)
         {
-            _context.Remove(new Work() { Id = id });
-            _context.SaveChanges();
-            return true;
+            var work = _context.Works.SingleOrDefault(work => work.Id == id);
+
+            if (work != null)
+            {
+                _context.Remove(work);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace AutoserviceBackCSharp.Controllers
             )!;
         }
 
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public Client GetClient(int id)
         {
             return _context.Clients.SingleOrDefault(client => client.Id == id)!;
@@ -50,7 +50,7 @@ namespace AutoserviceBackCSharp.Controllers
             return client;
         }
 
-        [HttpPatch("~/[controller]/{id}")]
+        [HttpPatch("{id}")]
         public bool UpdateClient(int id, string? name, string? phone, string? email, string? telegramId)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
@@ -68,7 +68,7 @@ namespace AutoserviceBackCSharp.Controllers
             return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteClient(int id)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);

@@ -21,14 +21,14 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.WorkLists.Where(
                 workList =>
-		    (name == null || workList.Name == name)
+		            (name == null || workList.Name == name)
                     && (description == null || workList.Description == description)
                     && (price == null || workList.Price == price)
                     && (duration == null || workList.Duration == duration)
             )!;
         }
 
-        [HttpGet("~/[controller]/{id}")]
+        [HttpGet("{id}")]
         public WorkList GetWorkList(int id)
         {
             return _context.WorkLists.SingleOrDefault(workList => workList.Id == id)!;
@@ -42,7 +42,8 @@ namespace AutoserviceBackCSharp.Controllers
             _context.SaveChanges();
             return workList;
         }
-        [HttpPatch("~/[controller]/{id}")]
+
+        [HttpPatch("{id}")]
         public bool UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
         {
             var updWorkList = _context.WorkLists.SingleOrDefault(wl => wl.Id == id);
@@ -50,20 +51,27 @@ namespace AutoserviceBackCSharp.Controllers
             {
             	updWorkList.Name = name ?? updWorkList.Name;
             	updWorkList.Description = description ?? updWorkList.Description;
-            	updWorkList.Price = price ?? updWorkList.Price;//change
-            	updWorkList.Duration = duration ?? updWorkList.Duration;//change
+            	updWorkList.Price = price ?? updWorkList.Price;
+            	updWorkList.Duration = duration ?? updWorkList.Duration;
                 _context.SaveChanges();
             	return true;
 	        }
 	        return false;
         }
 
-        [HttpDelete("~/[controller]/{id}")]
+        [HttpDelete("{id}")]
         public bool DeleteWorkList(int id)
         {
-            _context.Remove(new WorkList { Id = id });
-            _context.SaveChanges();
-            return true;
+            var worklist = _context.WorkLists.SingleOrDefault(worklist => worklist.Id == id);
+
+            if (worklist != null)
+            {
+                _context.Remove(worklist);
+                _context.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
     }
 }
