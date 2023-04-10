@@ -1,5 +1,6 @@
 using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -44,20 +45,8 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            if(phone != null){
-                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-                try
-                {   
-                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception)
-                {
-                    return BadRequest("Номер телефона должен быть корректным");
-                }
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
             }
 
             var client = new Client()
@@ -79,21 +68,8 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
-            if (phone != null)
-            {
-                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-                try
-                {
-                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception)
-                {
-                    return BadRequest("Номер телефона должен быть корректным");
-                }
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
             }
 
             if (client != null)
