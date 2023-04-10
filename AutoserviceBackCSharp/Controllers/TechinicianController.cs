@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoserviceBackCSharp.Models;
-using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -27,7 +26,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("{id}")]
         public ActionResult<Technician> GetTechnician(int id)
         {
-            var technician= _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            var technician = _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
             if (technician == null)
             {
                 return NotFound(new { message = "Техник не найден" });
@@ -38,45 +37,50 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostTechnician(string name, string phone, string specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
-            
-            
+            if (name == null)
+            {
+                return BadRequest("Имя техника не может быть пустым");
+            }
 
+            if (specialization == null)
+            {
+                return BadRequest("Специализация техника не может быть пустым");
+            }
 
-
-            if (name != null && !name.All(x => char.IsLetter(x)))
+            if (!name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
             }
 
-            if (specialization != null && !specialization.All(x => char.IsLetter(x)))
+            if (!specialization.All(x => char.IsLetter(x)))
             {
                 return BadRequest("специализация техника может содержать только буквы");
             }
 
-            if (name != null && (name.Length > 32 || name.Length < 3))
+            if (name.Length > 32 || name.Length < 3)
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
-            if (specialization != null && (specialization.Length > 32 || specialization.Length < 3))
+            if (specialization.Length > 32 || specialization.Length < 3)
             {
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
 
             var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-                try
+            try
+            {
+                var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                if (!phoneNumberUtil.IsValidNumber(phoneNumber))
                 {
-                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                    {
-                        throw new Exception();
-                    }
+                    throw new Exception();
                 }
-                catch (Exception)
-                {
-                    return BadRequest("Номер телефона должен быть корректным");
-                }
+            }
+            catch (Exception)
+            {
+                return BadRequest("Номер телефона должен быть корректным");
+            }
 
-            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization= specialization };
+            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization = specialization };
             if (startWork.HasValue)
             {
                 newTechnician.StartWork = DateOnly.FromDateTime((DateTime)startWork);
@@ -95,10 +99,6 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
 
-            
-
-
-
             if (name != null && !name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
@@ -109,7 +109,7 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("специализация техника может содержать только буквы");
             }
 
-            if (name!=null&&(name.Length > 32 ||  name.Length < 3))
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
@@ -148,11 +148,11 @@ namespace AutoserviceBackCSharp.Controllers
                 {
                     updTechnician.StartWorkInCompany = DateOnly.FromDateTime(startWorkInCompany.Value);
                 }
-                
+
                 _context.SaveChanges();
                 return Ok(new { updTechnician = updTechnician, message = "Техник успешно обновлен" });
             }
-            return NotFound(new { message = "Техник не найден" }); 
+            return NotFound(new { message = "Техник не найден" });
         }
 
         [HttpDelete("{id}")]
@@ -167,7 +167,7 @@ namespace AutoserviceBackCSharp.Controllers
                 return Ok(new { message = "Техник успешно ликвидирован" });
             }
 
-            return  NotFound(new { message = "Техник не найден" }); ;
+            return NotFound(new { message = "Техник не найден" }); ;
         }
     }
 }
