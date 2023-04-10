@@ -39,24 +39,30 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult PostTechnician(string name, string phone, string specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
             
-            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
+            
 
 
 
-            if (!name.All(x => char.IsLetter(x)))
+            if (name != null && !name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
             }
-            if (validator.IsValid(specialization)==false)
+
+            if (specialization != null && !specialization.All(x => char.IsLetter(x)))
             {
-                return BadRequest("Специализация техника не может содержать такие символы");
-            }
-            if (validator.IsValid(name) == false)
-            {
-                return BadRequest("Имя техника не может содержать такие символы");
+                return BadRequest("специализация техника может содержать только буквы");
             }
 
-                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+            if ((name != null && name.Length > 32) || (name != null && name.Length < 3))
+            {
+                return BadRequest("Имя техника не может быть такой длинны");
+            }
+            if ((specialization!=null&& specialization.Length > 32) || (specialization != null&&specialization.Length < 3))
+            {
+                return BadRequest("Специализация техника не может быть такой длинны");
+            }
+
+            var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
                 try
                 {
                     var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
@@ -89,7 +95,7 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
 
-            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
+            
 
 
 
@@ -97,13 +103,19 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Имя техника может содержать только буквы");
             }
-            if (specialization != null && validator.IsValid(specialization) == false)
+
+            if (specialization != null && !specialization.All(x => char.IsLetter(x)))
             {
-                return BadRequest("Специализация техника не может содержать такие символы");
+                return BadRequest("специализация техника может содержать только буквы");
             }
-            if (name != null && validator.IsValid(name) == false)
+
+            if ((name!=null&&name.Length > 32) || (name != null && name.Length < 3))
             {
-                return BadRequest("Имя техника не может содержать такие символы");
+                return BadRequest("Имя техника не может быть такой длинны");
+            }
+            if ((specialization != null&&specialization.Length > 32) || (specialization != null&&specialization.Length < 3))
+            {
+                return BadRequest("Специализация техника не может быть такой длинны");
             }
 
             if (phone != null)
