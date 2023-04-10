@@ -54,7 +54,7 @@ namespace AutoserviceBackCSharp.Controllers
                         throw new Exception();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return BadRequest("Номер телефона должен быть корректным");
                 }
@@ -90,7 +90,7 @@ namespace AutoserviceBackCSharp.Controllers
                         throw new Exception();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return BadRequest("Номер телефона должен быть корректным");
                 }

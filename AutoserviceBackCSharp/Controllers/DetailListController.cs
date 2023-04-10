@@ -40,10 +40,10 @@ namespace AutoserviceBackCSharp.Controllers
         { 
             var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' }); 
  
-            if (warehouseId <= 0  detailId <= 0  count == null) 
-            { 
-                return BadRequest(new { message = "ID склада, ID детали или кол-во деталей не могут быть пустыми" }); 
-            } 
+            //if (warehouseId <= 0  detailId <= 0  count == null) 
+            //{ 
+            //    return BadRequest(new { message = "ID склада, ID детали или кол-во деталей не могут быть пустыми" }); 
+            //} 
  
             if (!Regex.IsMatch(warehouseId.ToString(), "^[0-9]+$")) 
             { 
@@ -55,10 +55,10 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest(new { message = "ID детали не может содержать такие символы" }); 
             } 
  
-            if (count.Value <= 0  !Regex.IsMatch(count.Value.ToString(), "^[0-9]+$")  !validator.IsValid(count.Value.ToString())) 
-            { 
-                return BadRequest(new { message = "Кол-во деталей должно быть больше 0 и не содержать буквы или запрещенные символы" }); 
-            } 
+            //if (count.Value <= 0  !Regex.IsMatch(count.Value.ToString(), "^[0-9]+$")  !validator.IsValid(count.Value.ToString())) 
+            //{ 
+            //    return BadRequest(new { message = "Кол-во деталей должно быть больше 0 и не содержать буквы или запрещенные символы" }); 
+            //} 
  
             var newDetailList = new DetailList { Warehouse = warehouseId, Detail = detailId, Count = count.Value }; 
             _context.DetailLists.Add(newDetailList); 
@@ -70,10 +70,10 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<DetailList> UpdateDetailList(int id, int? warehouseId, int? detailId, int? count) 
         { 
             var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' }); 
-            if (warehouseId == 0  detailId == 0  count == null) 
-            { 
-                return BadRequest(new { message = "ID склада, ID детали или кол-во деталей не могут быть пустыми" }); 
-            } 
+            //if (warehouseId == 0  detailId == 0  count == null) 
+            //{ 
+            //    return BadRequest(new { message = "ID склада, ID детали или кол-во деталей не могут быть пустыми" }); 
+            //} 
  
             if (!Regex.IsMatch(warehouseId.ToString(), "^[0-9]+$")) 
             { 
