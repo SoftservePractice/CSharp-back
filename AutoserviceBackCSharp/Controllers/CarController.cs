@@ -17,48 +17,77 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet("{id}")]
-        public Car GetCar(int id)
+        public ActionResult<Car> GetCar(int id)
         {
-            return _context.Cars.SingleOrDefault(car => car.Id == id)!;
+            var car = _context.Cars.SingleOrDefault(car => car.Id == id)!;
+            if (car == null)
+            {
+                return NotFound(new { message = "Автомобиль не найден" });
+            }
+            return Ok(car);
         }
 
         [HttpGet]
-        public IEnumerable<Car> GetCars()
+        public ActionResult<IEnumerable<Car>> GetCars()
         {
-            return _context.Cars;
+            var cars = _context.Cars;
+
+            return Ok(cars);
         }
 
         [HttpPost]
-        public Car PostCar(string mark, DateTime year, string vin, string carNumber, int clientId)
+        public ActionResult PostCar(string mark, DateTime year, string vin, string carNumber, int clientId)
         {
-            var newCar = new Car() { Mark = mark, Year = DateOnly.FromDateTime(year), Vin = vin, CarNumber = carNumber, Client = clientId };
-            _context.Cars.Add(newCar);
+            if(mark.Length < 3 || mark.Length > 30)
+            {
+                return BadRequest("Марка машины некорректная");
+            }
+            if (vin.Length < 3 || vin.Length > 30)
+            {
+                return BadRequest("Vin код машины некорректный");
+            }
+            if (carNumber.Length < 3 || carNumber.Length > 20)
+            {
+                return BadRequest("Номер машины некорректный");
+            }
+
+            var car = new Car()
+            {
+                Mark = mark,
+                Year = DateOnly.FromDateTime(year),
+                Vin = vin,
+                CarNumber = carNumber,
+                Client = clientId
+            };
+
+            _context.Cars.Add(car);
             _context.SaveChanges();
-            return newCar;
+
+            return CreatedAtAction(nameof(PostCar), new { car = car, message = "Автомобиль успешно создан" });
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateCar(int id, string? mark, DateTime? year, string? vin, string? carNumber, int? clientId)
+        public ActionResult<Car> UpdateCar(int id, string? mark, DateTime? year, string? vin, string? carNumber, int? clientId)
         {
-            var updCar = _context.Cars.SingleOrDefault(car => car.Id == id);
-            if(updCar != null)
+            var car = _context.Cars.SingleOrDefault(car => car.Id == id);
+            if (car != null)
             {
-                updCar.Mark = mark ?? updCar.Mark;
-                updCar.Vin = vin ?? updCar.Vin;
-                updCar.CarNumber = carNumber ?? updCar.CarNumber;
-                updCar.Client = clientId ?? updCar.Client;
-                if(year.HasValue)
+                car.Mark = mark ?? car.Mark;
+                car.Vin = vin ?? car.Vin;
+                car.CarNumber = carNumber ?? car.CarNumber;
+                car.Client = clientId ?? car.Client;
+                if (year.HasValue)
                 {
-                    updCar.Year = DateOnly.FromDateTime(year.Value);
+                    car.Year = DateOnly.FromDateTime(year.Value);
                 }
                 _context.SaveChanges();
-                return true;
+                return Ok(new { car = car, message = "Автомобиль успешно обновлен" });
             }
-            return false;
+            return NotFound(new { message = "Автомобиль не найден" });
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteCar(int id)
+        public ActionResult DeleteCar(int id)
         {
             var car = _context.Cars.SingleOrDefault(car => car.Id == id);
 
@@ -66,10 +95,10 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(car);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Автомобиль успешно удален" });
             }
 
-            return false;
+            return NotFound(new { message = "Автомобиль не найден" });
         }
     }
 }

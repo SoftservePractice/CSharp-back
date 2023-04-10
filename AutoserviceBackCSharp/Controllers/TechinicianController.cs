@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoserviceBackCSharp.Models;
+using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -10,6 +11,7 @@ namespace AutoserviceBackCSharp.Controllers
     {
         private readonly ILogger<TechinicianController> _logger;
         private readonly PracticedbContext _context;
+
 
         public TechinicianController(ILogger<TechinicianController> logger, PracticedbContext context)
         {
@@ -23,24 +25,94 @@ namespace AutoserviceBackCSharp.Controllers
             return _context.Technicians;
         }
         [HttpGet("{id}")]
-        public Technician GetTechnician(int id)
+        public ActionResult<Technician> GetTechnician(int id)
         {
-            return _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            var technician = _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            if (technician == null)
+            {
+                return NotFound(new { message = "Техник не найден" });
+            }
+            return Ok(technician);
         }
 
         [HttpPost]
-        public Technician PostTechnician(string name, string phone, string specialization, DateTime startWork, DateTime startWorkInCompany)
+        public ActionResult PostTechnician(string name, string phone, string specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
-            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization=specialization, StartWork = DateOnly.FromDateTime(startWork), StartWorkInCompany = DateOnly.FromDateTime(startWorkInCompany) };
+            if (name == null)
+            {
+                return BadRequest("Имя техника не может быть пустым");
+            }
+
+            if (specialization == null)
+            {
+                return BadRequest("Специализация техника не может быть пустым");
+            }
+
+            if (!name.All(x => char.IsLetter(x)))
+            {
+                return BadRequest("Имя техника может содержать только буквы");
+            }
+
+            if (!specialization.All(x => char.IsLetter(x)))
+            {
+                return BadRequest("специализация техника может содержать только буквы");
+            }
+
+            if (name.Length > 32 || name.Length < 3)
+            {
+                return BadRequest("Имя техника не может быть такой длинны");
+            }
+            if (specialization.Length > 32 || specialization.Length < 3)
+            {
+                return BadRequest("Специализация техника не может быть такой длинны");
+            }
+
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
+            }
+
+            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization = specialization };
+            if (startWork.HasValue)
+            {
+                newTechnician.StartWork = DateOnly.FromDateTime((DateTime)startWork);
+            }
+            if (startWorkInCompany.HasValue)
+            {
+                newTechnician.StartWorkInCompany = DateOnly.FromDateTime((DateTime)startWorkInCompany);
+            }
             _context.Technicians.Add(newTechnician);
             _context.SaveChanges();
-            return newTechnician;
+            return CreatedAtAction(nameof(PostTechnician), new { newTechnician = newTechnician, message = "Техник успешно создан" });
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateTechnician(int id, string? name, string? phone, string? specialization, DateTime? startWork, DateTime? startWorkInCompany)
+        public ActionResult<Technician> UpdateTechnician(int id, string? name, string? phone, string? specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
+
+            if (name != null && !name.All(x => char.IsLetter(x)))
+            {
+                return BadRequest("Имя техника может содержать только буквы");
+            }
+
+            if (specialization != null && !specialization.All(x => char.IsLetter(x)))
+            {
+                return BadRequest("специализация техника может содержать только буквы");
+            }
+
+            if (name != null && (name.Length > 32 || name.Length < 3))
+            {
+                return BadRequest("Имя техника не может быть такой длинны");
+            }
+            if (specialization != null && (specialization.Length > 32 || specialization.Length < 3))
+            {
+                return BadRequest("Специализация техника не может быть такой длинны");
+            }
+
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
+            }
+
             if (updTechnician != null)
             {
                 updTechnician.Name = name ?? updTechnician.Name;
@@ -54,15 +126,15 @@ namespace AutoserviceBackCSharp.Controllers
                 {
                     updTechnician.StartWorkInCompany = DateOnly.FromDateTime(startWorkInCompany.Value);
                 }
-                
+
                 _context.SaveChanges();
-                return true;
+                return Ok(new { updTechnician = updTechnician, message = "Техник успешно обновлен" });
             }
-            return false;
+            return NotFound(new { message = "Техник не найден" });
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteTechnician(int id)
+        public ActionResult DeleteTechnician(int id)
         {
             var technician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
 
@@ -71,10 +143,10 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.Orders.Where(val => val.Technician == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(technician);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Техник успешно ликвидирован" });
             }
 
-            return false;
+            return NotFound(new { message = "Техник не найден" }); ;
         }
     }
 }

@@ -1,5 +1,6 @@
 using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -17,26 +18,37 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Client> GetClients(string? name, string? phone, string? email, string? telegramId)
+        public ActionResult<IEnumerable<Client>> GetClients(string? name, string? phone, string? email, string? telegramId)
         {
-            return _context.Clients.Where(
+            var clients = _context.Clients.Where(
                 client =>
                     (name == null || client.Name == name)
                     && (phone == null || client.Phone == phone)
                     && (email == null || client.Email == email)
                     && (telegramId == null || client.TelegramId == telegramId)
             )!;
+
+            return Ok(clients);
         }
 
         [HttpGet("{id}")]
-        public Client GetClient(int id)
+        public ActionResult<Client> GetClient(int id)
         {
-            return _context.Clients.SingleOrDefault(client => client.Id == id)!;
+            var client = _context.Clients.SingleOrDefault(client => client.Id == id);
+            if (client == null)
+            {
+                return NotFound(new { message = "Пользователь не найден" });
+            }
+            return Ok(client);
         }
 
         [HttpPost]
-        public Client PostClient(string? name, string? phone, string? email, string? telegramId)
+        public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
+            }
+
             var client = new Client()
             {
                 Name = name ?? null,
@@ -47,13 +59,18 @@ namespace AutoserviceBackCSharp.Controllers
             };
             _context.Clients.Add(client);
             _context.SaveChanges();
-            return client;
+
+            return CreatedAtAction(nameof(PostClient), new { client = client, message = "Пользователь успешно создан" });
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateClient(int id, string? name, string? phone, string? email, string? telegramId)
+        public ActionResult<Client> UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
+
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
+            }
 
             if (client != null)
             {
@@ -61,15 +78,16 @@ namespace AutoserviceBackCSharp.Controllers
                 client.Phone = phone ?? client.Phone;
                 client.Email = email ?? client.Email;
                 client.TelegramId = telegramId ?? client.TelegramId;
+                client.IsConfirm = isConfirm ?? client.IsConfirm;
                 _context.SaveChanges();
-                return true;
+                return Ok(new { client = client, message = "Пользователь успешно обновлен" });
             }
 
-            return false;
+            return NotFound(new { message = "Пользователь не найден" });
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteClient(int id)
+        public ActionResult DeleteClient(int id)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
@@ -80,10 +98,10 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.Feedbacks.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(client);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Пользователь успешно удален" });
             }
 
-            return false;
+            return NotFound(new { message = "Пользователь не найден" });
         }
     }
 }
