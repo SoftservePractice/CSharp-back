@@ -68,6 +68,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (technician != null)
             {
+                _context.Orders.Where(val => val.Technician == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(technician);
                 _context.SaveChanges();
                 return true;

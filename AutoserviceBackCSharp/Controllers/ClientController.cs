@@ -75,6 +75,9 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (client != null)
             {
+                _context.Orders.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
+                _context.Cars.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
+                _context.Feedbacks.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(client);
                 _context.SaveChanges();
                 return true;

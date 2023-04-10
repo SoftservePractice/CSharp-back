@@ -68,6 +68,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (detail != null)
             {
+                _context.DetailLists.Where(val => val.Detail == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(detail);
                 _context.SaveChanges();
                 return true;

@@ -60,6 +60,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (warehouse != null)
             {
+                _context.DetailLists.Where(val => val.Warehouse == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(warehouse);
                 _context.SaveChanges();
                 return true;
