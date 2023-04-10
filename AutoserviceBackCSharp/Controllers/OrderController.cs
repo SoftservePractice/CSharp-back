@@ -85,6 +85,8 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (order != null)
             {
+                _context.Feedbacks.Where(fd => fd.Order == id).ToList().ForEach(fd => _context.Remove(fd));
+                _context.Works.Where(wr => wr.Order == id).ToList().ForEach(wr => _context.Remove(wr));
                 _context.Remove(order);
                 _context.SaveChanges();
                 return true;
