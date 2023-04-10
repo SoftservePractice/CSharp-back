@@ -44,34 +44,26 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            if ((name == null || name.Length == 0) || (phone == null || phone.Length == 0))
-            {
-                return BadRequest(
-                    new { message = "Имя или номер пользователя не могут быть пустыми" }
-                );
-            }
-            if (!name.All(x => char.IsLetter(x)))
-            {
-                return BadRequest("Имя пользователя может содержать только буквы");
-            }
-            var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-            try
-            {
-                var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                {
-                    throw new Exception();
+            if(phone != null){
+                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+                try
+                {   
+                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                    {
+                        throw new Exception();
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Номер телефона должен быть корректным");
+                catch (Exception ex)
+                {
+                    return BadRequest("Номер телефона должен быть корректным");
+                }
             }
 
             var client = new Client()
             {
-                Name = name ?? "",
-                Phone = phone ?? "",
+                Name = name ?? null,
+                Phone = phone ?? null,
                 Email = email ?? null,
                 TelegramId = telegramId ?? null,
                 IsConfirm = false
@@ -87,19 +79,6 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
-            if ((name == null || name.Length == 0) || (phone == null || phone.Length == 0))
-            {
-                return BadRequest(
-                    new { message = "Имя или номер пользователя не могут быть пустыми" }
-                );
-            }
-            if (name != null)
-            {
-                if (!name.All(x => char.IsLetter(x)))
-                {
-                    return BadRequest("Имя пользователя может содержать только буквы");
-                }
-            }
             if (phone != null)
             {
                 var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();

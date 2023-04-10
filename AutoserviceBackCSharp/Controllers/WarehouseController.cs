@@ -1,6 +1,8 @@
 ﻿using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Diagnostics;
+using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -31,8 +33,23 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Warehouse PostWarehouse(string adress, string name)
+        public ActionResult<Warehouse> PostWarehouse(string adress, string name)
         {
+            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
+            if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
+            {
+                return BadRequest(
+                    new { message = "Имя и адресс склада не могут быть пустыми" }
+                    );
+            }
+            if (validator.IsValid(adress) == false)
+            {
+                return BadRequest("Склад техника не может содержать такие символы");
+            }
+            if (!validator.IsValid(adress))
+            {
+                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
+            }
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
@@ -40,17 +57,30 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateWarehouse(int id, string? adress, string? name)
+        public ActionResult<Warehouse> UpdateWarehouse(int id, string? adress, string? name)
         {
+            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
+            if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
+            {
+                return BadRequest("Имя и адресс склада не могут быть пустыми");
+            }
+            if (validator.IsValid(adress) == false)
+            {
+                return BadRequest("Склад техника не может содержать такие символы");
+            }
+            if (!validator.IsValid(adress))
+            {
+                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
+            }
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
             if(updWarehouse != null)
             {
                 updWarehouse.Address = adress ?? updWarehouse.Address;
                 updWarehouse.Name = name ?? updWarehouse.Name;
                 _context.SaveChanges();
-                return true;
+                return Ok(new { updWarehouse = updWarehouse, message = "Склад успешно обновлен" }); ;
             }
-            return false;
+            return NotFound(new { message = "Склад не найден" });
         }
 
         [HttpDelete("{id}")]
