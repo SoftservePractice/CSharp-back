@@ -25,9 +25,14 @@ namespace AutoserviceBackCSharp.Controllers
             return _context.Technicians;
         }
         [HttpGet("{id}")]
-        public Technician GetTechnician(int id)
+        public ActionResult<Technician> GetTechnician(int id)
         {
-            return _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            var technician= _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            if (technician == null)
+            {
+                return NotFound(new { message = "Техник не найден" });
+            }
+            return Ok(technician);
         }
 
         [HttpPost]
@@ -35,39 +40,43 @@ namespace AutoserviceBackCSharp.Controllers
         {
             
             var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            if ((name == null || name.Length == 0) || (phone == null || phone.Length == 0)||(specialization==null||specialization.Length==0))
-            {
-                return BadRequest(
-                    new { message = "Имя или номер или специализация техника не могут быть пустыми" }
-                );
-            }
 
-            
 
+
+            #pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             if (!name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
             }
-            if(validator.IsValid(specialization)==false)
+            #pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
+            if (validator.IsValid(specialization)==false)
             {
                 return BadRequest("Специализация техника не может содержать такие символы");
             }
-
-            var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-            try
+            #pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
+            if (validator.IsValid(name) == false)
             {
-                var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                return BadRequest("Имя техника не может содержать такие символы");
+            }
+
+            if (phone != null)
+            {
+                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+                try
                 {
-                    throw new Exception();
+                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("Номер телефона должен быть корректным");
                 }
             }
-            catch (Exception ex)
-            {
-                return BadRequest("Номер телефона должен быть корректным");
-            }
 
-            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization=specialization, StartWork = DateOnly.FromDateTime((DateTime)startWork), StartWorkInCompany = DateOnly.FromDateTime((DateTime)startWorkInCompany) };
+            var newTechnician = new Technician() { Name = name??null, Phone = phone ?? null, Specialization=specialization ?? null, StartWork = DateOnly.FromDateTime((DateTime)startWork), StartWorkInCompany = DateOnly.FromDateTime((DateTime)startWorkInCompany) };
             _context.Technicians.Add(newTechnician);
             _context.SaveChanges();
             return CreatedAtAction(nameof(PostTechnician), new { newTechnician = newTechnician, message = "Техник успешно создан" });
@@ -79,37 +88,42 @@ namespace AutoserviceBackCSharp.Controllers
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
 
             var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            if ((name == null || name.Length == 0) || (phone == null || phone.Length == 0) || (specialization == null || specialization.Length == 0))
-            {
-                return BadRequest(
-                    new { message = "Имя или номер или специализация техника не могут быть пустыми" }
-                );
-            }
 
 
 
+            #pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             if (!name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
             }
+            #pragma warning disable CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
             if (validator.IsValid(specialization) == false)
             {
                 return BadRequest("Специализация техника не может содержать такие символы");
             }
-
-            var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-            try
+            #pragma warning restore CS8604 // Возможно, аргумент-ссылка, допускающий значение NULL.
+            if (validator.IsValid(name) == false)
             {
-                var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                return BadRequest("Имя техника не может содержать такие символы");
+            }
+
+            if (phone != null)
+            {
+                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+                try
                 {
-                    throw new Exception();
+                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest("Номер телефона должен быть корректным");
                 }
             }
-            catch (Exception ex)
-            {
-                return BadRequest("Номер телефона должен быть корректным");
-            }
+
             if (updTechnician != null)
             {
                 updTechnician.Name = name ?? updTechnician.Name;
