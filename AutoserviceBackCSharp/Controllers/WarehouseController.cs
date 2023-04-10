@@ -44,10 +44,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Склад не может содержать такие символы");
             }
-            if (!validator.IsValid(adress) == false)
-            {
-                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
-            }
+            
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
@@ -66,10 +63,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Склад не может содержать такие символы");
             }
-            if (!validator.IsValid(adress) == false)
-            {
-                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
-            }
+           
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
             if(updWarehouse != null)
             {
