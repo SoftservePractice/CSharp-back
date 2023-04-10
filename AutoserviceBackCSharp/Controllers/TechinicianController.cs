@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoserviceBackCSharp.Models;
+using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -66,17 +67,7 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
 
-            var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-            try
-            {
-                var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                {
-                    throw new Exception();
-                }
-            }
-            catch (Exception)
-            {
+            if(!PhoneValidator.Validate(phone)){
                 return BadRequest("Номер телефона должен быть корректным");
             }
 
@@ -118,21 +109,8 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
 
-            if (phone != null)
-            {
-                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-                try
-                {
-                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception)
-                {
-                    return BadRequest("Номер телефона должен быть корректным");
-                }
+            if(!PhoneValidator.Validate(phone)){
+                return BadRequest("Номер телефона должен быть корректным");
             }
 
             if (updTechnician != null)
