@@ -1,12 +1,15 @@
-using AutoserviceBackCSharp.Models;
+﻿using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Diagnostics;
+using AutoserviceBackCSharp.Validation;
 
 namespace AutoserviceBackCSharp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [DisableCors]
+
     public class WarehouseController : ControllerBase
     {
         private readonly ILogger<CarController> _logger;
@@ -32,21 +35,19 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult<Warehouse> PostWarehouse(string adress, string name)
         {
-           // var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            //if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
-            //{
-            //    return BadRequest(
-            //        new { message = "Имя и адресс склада не могут быть пустыми" }
-            //        );
-            //}
-            //if (validator.IsValid(adress) == false)
-            //{
-            //    return BadRequest("Склад техника не может содержать такие символы");
-            //}
-            //if (!validator.IsValid(adress))
-            //{
-            //    return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
-            //}
+            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
+            if ((name.Length == 0) || (adress.Length == 0))
+            {
+                return BadRequest("Имя и адресс склада не могут быть пустыми");
+            }
+            if (validator.IsValid(adress) == false)
+            {
+                return BadRequest("Склад техника не может содержать такие символы");
+            }
+            if (!validator.IsValid(adress))
+            {
+                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
+            }
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
@@ -54,21 +55,21 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPatch("{id}")]
-        public ActionResult<Warehouse> UpdateWarehouse(int id, string? adress, string? name)
+        public ActionResult<Warehouse> UpdateWarehouse(int id, string adress, string name)
         {
-            //var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            //if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
-            //{
-            //    return BadRequest("Имя и адресс склада не могут быть пустыми");
-            //}
-            //if (validator.IsValid(adress) == false)
-            //{
-            //    return BadRequest("Склад техника не может содержать такие символы");
-            //}
-            //if (!validator.IsValid(adress))
-            //{
-            //    return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
-            //}
+            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
+            if (( name.Length == 0) || (adress.Length == 0))
+            {
+                return BadRequest("Имя и адресс склада не могут быть пустыми");
+            }
+            if (validator.IsValid(adress) == false)
+            {
+                return BadRequest("Склад техника не может содержать такие символы");
+            }
+            if (!validator.IsValid(adress))
+            {
+                return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
+            }
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
             if(updWarehouse != null)
             {
@@ -96,4 +97,3 @@ namespace AutoserviceBackCSharp.Controllers
         }
     }
 }
-
