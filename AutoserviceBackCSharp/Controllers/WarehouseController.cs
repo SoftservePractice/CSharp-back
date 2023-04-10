@@ -1,4 +1,4 @@
-﻿using AutoserviceBackCSharp.Models;
+using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -96,3 +96,4 @@ namespace AutoserviceBackCSharp.Controllers
         }
     }
 }
+
