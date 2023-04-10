@@ -54,7 +54,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Год изготовления машины некорректный");
             }
-            if (clientId != null && (_context.Clients.SingleOrDefault(client => client.Id == id) == null))
+            if (clientId != 0 && (_context.Clients.SingleOrDefault(client => client.Id == clientId) == null))
             {
                 return NotFound(new { message = "Пользователя с таким ID нет" });
             }
