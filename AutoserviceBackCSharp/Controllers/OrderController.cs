@@ -29,7 +29,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Order PostOrder(int clientId, int? technician, DateTime start, DateTime? end, int? finalPrice, int car, int carMieleage, DateTime appointmentTime)
+        public Order PostOrder(int clientId, int? technician, DateTime start, DateTime? end, int? finalPrice, int? car, int carMieleage, DateTime appointmentTime)
         {
             var newOrder = new Order() { 
                 Client = clientId, 
