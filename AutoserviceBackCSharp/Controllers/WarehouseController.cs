@@ -42,9 +42,9 @@ namespace AutoserviceBackCSharp.Controllers
             }
             if (validator.IsValid(adress) == false)
             {
-                return BadRequest("Склад техника не может содержать такие символы");
+                return BadRequest("Склад не может содержать такие символы");
             }
-            if (!validator.IsValid(adress))
+            if (!validator.IsValid(adress) == false)
             {
                 return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
             }
@@ -64,9 +64,9 @@ namespace AutoserviceBackCSharp.Controllers
             }
             if (validator.IsValid(adress) == false)
             {
-                return BadRequest("Склад техника не может содержать такие символы");
+                return BadRequest("Склад не может содержать такие символы");
             }
-            if (!validator.IsValid(adress))
+            if (!validator.IsValid(adress) == false)
             {
                 return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
             }
