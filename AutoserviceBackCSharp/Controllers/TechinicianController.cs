@@ -53,11 +53,11 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("специализация техника может содержать только буквы");
             }
 
-            if ((name != null && name.Length > 32) || (name != null && name.Length < 3))
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
-            if ((specialization!=null&& specialization.Length > 32) || (specialization != null&&specialization.Length < 3))
+            if (specialization != null && (specialization.Length > 32 || specialization.Length < 3))
             {
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
@@ -109,11 +109,11 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("специализация техника может содержать только буквы");
             }
 
-            if ((name!=null&&name.Length > 32) || (name != null && name.Length < 3))
+            if (name!=null&&(name.Length > 32 ||  name.Length < 3))
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
-            if ((specialization != null&&specialization.Length > 32) || (specialization != null&&specialization.Length < 3))
+            if (specialization != null && (specialization.Length > 32 || specialization.Length < 3))
             {
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
