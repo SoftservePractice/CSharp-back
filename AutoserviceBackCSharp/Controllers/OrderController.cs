@@ -18,9 +18,14 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Order> GetOrders()
+        public ActionResult<IEnumerable<Order>> GetOrders(int? clientId)
         {
-            return _context.Orders;
+            var orders = _context.Orders.Where(
+                order =>
+                    (clientId == null || order.Client == clientId)
+            )!;
+
+            return Ok(orders);
         }
         [HttpGet("{id}")]
         public Order GetOrder(int id)
