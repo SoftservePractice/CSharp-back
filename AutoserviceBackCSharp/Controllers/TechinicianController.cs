@@ -167,7 +167,7 @@ namespace AutoserviceBackCSharp.Controllers
                 return Ok(new { message = "Техник успешно ликвидирован" });
             }
 
-            return  NotFound(new { message = "Техник не найден" }); ;
+            return  NotFound(new { message = "Техник не найден" }); 
         }
     }
 }
