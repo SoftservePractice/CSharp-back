@@ -39,24 +39,11 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Category> PostCategory(string name, int? parentCategory)
         {
             var category = new Category() { Name = name, ParentCategory = parentCategory };
-            if (name == null)
-            {
-                return BadRequest("Имя категории не может быть пустым");
-            }
-            if (!name.All(x => char.IsLetter(x)))
-            {
-                return BadRequest("Имя категории может содержать только буквы");
-            }
-            if (name.Length > 32 || name.Length < 3)
+
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
                 return BadRequest("Имя категории не может быть такой длинны");
             }
-            if (parentCategory == null)
-            {
-                return BadRequest("Родитель категории не может быть пустым");
-            }
-            
-
             _context.Categories.Add(category);
             _context.SaveChanges();
             return category;
@@ -66,35 +53,22 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Category> UpdateCategory(int id, string? name, int? parentCategory)
         {
             var updCategory = _context.Categories.SingleOrDefault(updCategory => updCategory.Id == id);
-            if (name == null)
-            {
-                return BadRequest("Имя техника не может быть пустым");
-            }
-            if (!name.All(x => char.IsLetter(x)))
-            {
-                return BadRequest("Имя техника может содержать только буквы");
-            }
-            if (name.Length > 32 || name.Length < 3)
-            {
-                return BadRequest("Имя техника не может быть такой длинны");
-            }
-            if (parentCategory == null)
-            {
-                return BadRequest("Родитель категории не может быть пустым");
-            }
-            
 
+            if (name != null && (name.Length > 32 || name.Length < 3))
+            {
+                return BadRequest("Имя категории не может быть такой длинны");
+            }
 
             if (updCategory != null)
             {
-                    updCategory.Name = name ?? updCategory.Name;
-                    updCategory.ParentCategory = parentCategory ?? updCategory.ParentCategory;
-                    _context.SaveChanges();
-                    return Ok(new { updCategory = updCategory, message = "Категория успешно обновлена" });
+                updCategory.Name = name ?? updCategory.Name;
+                updCategory.ParentCategory = parentCategory ?? updCategory.ParentCategory;
+                _context.SaveChanges();
+                return Ok(new { updCategory = updCategory, message = "Категория успешно обновлена" });
             }
-                return BadRequest("Категория не найдена");
+            return BadRequest("Категория не найдена");
 
-            
+
         }
         [HttpDelete("~/[controller]/{id}")]
         public ActionResult<Category> DeleteCategory(int id)
@@ -103,13 +77,14 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (category != null)
             {
-                 _context.Remove(category);
-                 _context.SaveChanges();
-                 return Ok(new { message = "Категория успешна удалена" });
+                _context.Categories.Where(val => val.ParentCategory == id).ToList().ForEach(val => _context.Remove(val));
+                _context.Remove(category);
+                _context.SaveChanges();
+                return Ok(new { message = "Категория успешна удалена" });
             }
-                return NotFound(new { message = "Категория не найдена" });
+            return NotFound(new { message = "Категория не найдена" });
         }
-        
+
 
     }
 }
