@@ -40,28 +40,15 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult<Warehouse> PostWarehouse(string adress, string name)
         {
-            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            if (name == null)
+
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
-                return BadRequest("Имя склада не может быть пустым");
+                return BadRequest("Имя категории не может быть такой длинны");
             }
-            if (adress == null)
+            if (adress != null && (adress.Length > 32 || adress.Length < 3))
             {
-                return BadRequest("Адресс склада не может быть пустым");
+                return BadRequest("Адресс категории не может быть такой длинны");
             }
-            if (name.Length > 32 || name.Length < 3)
-            {
-                return BadRequest("Имя склада не может быть такой длинны");
-            }
-            if (adress.Length > 32 || adress.Length < 3)
-            {
-                return BadRequest("Адресс склада не может быть такой длинны");
-            }
-            if (validator.IsValid(adress) == false)
-            {
-                return BadRequest("Склад не может содержать такие символы");
-            }
-            
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
@@ -71,26 +58,14 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPatch("{id}")]
         public ActionResult<Warehouse> UpdateWarehouse(int id, string adress, string name)
         {
-            var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            if (name == null)
+
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
-                return BadRequest("Имя склада не может быть пустым");
+                return BadRequest("Имя категории не может быть такой длинны");
             }
-            if (adress == null)
+            if (adress != null && (adress.Length > 32 || adress.Length < 3))
             {
-                return BadRequest("Адресс склада не может быть пустым");
-            }
-            if (name.Length > 32 || name.Length < 3)
-            {
-                return BadRequest("Имя склада не может быть такой длинны");
-            }
-            if (adress.Length > 32 || adress.Length < 3)
-            {
-                return BadRequest("Адресс склада не может быть такой длинны");
-            }
-            if (validator.IsValid(adress) == false)
-            {
-                return BadRequest("Склад не может содержать такие символы");
+                return BadRequest("Адресс категории не может быть такой длинны");
             }
 
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
@@ -111,6 +86,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (warehouse != null)
             {
+
                 _context.Remove(warehouse);
                 _context.SaveChanges();
                 return Ok(new { message = "Склад успешно удален" });
