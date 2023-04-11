@@ -18,9 +18,14 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Order> GetOrders()
+        public ActionResult<IEnumerable<Order>> GetOrders(int? clientId)
         {
-            return _context.Orders;
+            var orders = _context.Orders.Where(
+                order =>
+                    (clientId == null || order.Client == clientId)
+            )!;
+
+            return Ok(orders);
         }
         [HttpGet("{id}")]
         public Order GetOrder(int id)
@@ -29,7 +34,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public Order PostOrder(int clientId, int? technician, DateTime start, DateTime? end, int? finalPrice, int car, int carMieleage, DateTime appointmentTime)
+        public Order PostOrder(int clientId, int? technician, DateTime start, DateTime? end, int? finalPrice, int? car, int carMieleage, DateTime appointmentTime)
         {
             var newOrder = new Order() { 
                 Client = clientId, 
@@ -85,6 +90,8 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (order != null)
             {
+                _context.Feedbacks.Where(fd => fd.Order == id).ToList().ForEach(fd => _context.Remove(fd));
+                _context.Works.Where(wr => wr.Order == id).ToList().ForEach(wr => _context.Remove(wr));
                 _context.Remove(order);
                 _context.SaveChanges();
                 return true;
