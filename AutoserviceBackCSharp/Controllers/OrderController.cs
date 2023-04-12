@@ -39,73 +39,93 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Order> PostOrder(int clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
+        public ActionResult<Order> PostOrder(int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
-            if(finalPrice != null && finalPrice > 10000000){
-                return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+            var client =_context.Clients.FirstOrDefault(client => client.Id == clientId) ?? null;
+            if(client == null)
+            {
+                return BadRequest(new { message = "Пользователь с таким id не найден" });
             }
-            if(carMieleage != null && carMieleage > 1000000000000){
-                return BadRequest(new { message = "Такую машину можно на свалку" });
-            }
+            else
+            {
+                if(finalPrice != null && finalPrice > 10000000){
+                    return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+                }
+                if(carMieleage != null && carMieleage > 1000000000000){
+                    return BadRequest(new { message = "Такую машину можно на свалку" });
+                }
 
-            var newOrder = new Order() { 
-                Client = clientId, 
-                Technician = technician,
-                FinalPrice = finalPrice, 
-                Car = car,
-                CarMileage = carMieleage
-            };
-            if(start.HasValue)
-            {
-                newOrder.Start = DateOnly.FromDateTime(start.Value);
+                var newOrder = new Order() { 
+                    Client = clientId, 
+                    Technician = technician ?? null,
+                    FinalPrice = finalPrice ?? null, 
+                    Car = car ?? null,
+                    CarMileage = carMieleage ?? null
+                };
+                if(start.HasValue)
+                {
+                    newOrder.Start = DateOnly.FromDateTime(start.Value);
+                }
+                if(end.HasValue)
+                {
+                    newOrder.End = DateOnly.FromDateTime(end.Value);
+                }
+                if(appointmentTime.HasValue)
+                {
+                    newOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+                }
+                _context.Orders.Add(newOrder);
+                _context.SaveChanges();
+                return Ok(newOrder);
             }
-            if(end.HasValue)
-            {
-                newOrder.End = DateOnly.FromDateTime(end.Value);
-            }
-            if(appointmentTime.HasValue)
-            {
-                newOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
-            }
-            _context.Orders.Add(newOrder);
-            _context.SaveChanges();
-            return Ok(newOrder);
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Order> UpdateOrder(int id, int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
-            if(finalPrice != null && finalPrice > 10000000){
-                return BadRequest(new { message = "Ну слишком чет большая сумма)" });
-            }
-            if(carMieleage != null && carMieleage > 1000000000000){
-                return BadRequest(new { message = "Такую машину можно на свалку" });
-            }
-
-            var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
-            if(updOrder != null)
+            var client =_context.Clients.FirstOrDefault(client => client.Id == clientId) ?? null;
+            if(client == null)
             {
-                updOrder.Client = clientId ?? updOrder.Client;
-                updOrder.Technician = technician ?? updOrder.Technician;
-                updOrder.FinalPrice = finalPrice ?? updOrder.FinalPrice;
-                updOrder.Car = car ?? updOrder.Car;
-                updOrder.CarMileage = carMieleage ?? updOrder.CarMileage;
-                if (start.HasValue)
-                {
-                    updOrder.Start = DateOnly.FromDateTime(start.Value);
-                }
-                if (end.HasValue)
-                {
-                    updOrder.End = DateOnly.FromDateTime(end.Value);
-                }
-                if(appointmentTime.HasValue)
-                {
-                    updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
-                }
-                _context.SaveChanges();
-                return Ok(new { order = updOrder, message = "Заказ успешно обновлен" });
+                return BadRequest(new { message = "Пользователь с таким id не найден" });
             }
-            return NotFound(new { message = "Заказ не найден" });
+            else
+            {
+                if(finalPrice != null && finalPrice > 10000000){
+                    return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+                }
+                if(carMieleage != null && carMieleage > 1000000000000){
+                    return BadRequest(new { message = "Такую машину можно на свалку" });
+                }
+
+                var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
+                if(updOrder != null)
+                {
+                    updOrder.Client = clientId ?? updOrder.Client;
+                    updOrder.Technician = technician ?? updOrder.Technician;
+                    updOrder.FinalPrice = finalPrice ?? updOrder.FinalPrice;
+                    updOrder.Car = car ?? updOrder.Car;
+                    updOrder.CarMileage = carMieleage ?? updOrder.CarMileage;
+                    if (start.HasValue)
+                    {
+                        updOrder.Start = DateOnly.FromDateTime(start.Value);
+                    }
+                    if (end.HasValue)
+                    {
+                        updOrder.End = DateOnly.FromDateTime(end.Value);
+                    }
+                    if(appointmentTime.HasValue)
+                    {
+                        updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+                    }
+                    else
+                    {
+                        updOrder.AppointmentTime = DateOnly.MinValue;
+                    }
+                    _context.SaveChanges();
+                    return Ok(new { order = updOrder, message = "Заказ успешно обновлен" });
+                }
+                return NotFound(new { message = "Заказ не найден" });
+            }
         }
 
         [HttpDelete("{id}")]

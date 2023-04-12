@@ -8,7 +8,7 @@ public partial class Order
 {
     public int Id { get; set; }
 
-    public int Client { get; set; }
+    public int? Client { get; set; }
 
     public int? Technician { get; set; }
 
