@@ -28,35 +28,60 @@ namespace AutoserviceBackCSharp.Controllers
             return Ok(orders);
         }
         [HttpGet("{id}")]
-        public Order GetOrder(int id)
+        public ActionResult<Order> GetOrder(int id)
         {
-            return _context.Orders.SingleOrDefault(order => order.Id == id)!;
+            var order =  _context.Orders.SingleOrDefault(order => order.Id == id);
+            if (order == null)
+            {
+                return NotFound(new { message = "Заказ не найден" });
+            }
+            return Ok(order);
         }
 
         [HttpPost]
-        public Order PostOrder(int clientId, int? technician, DateTime start, DateTime? end, int? finalPrice, int? car, int carMieleage, DateTime appointmentTime)
+        public ActionResult<Order> PostOrder(int clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
+            if(finalPrice != null && finalPrice > 10000000){
+                return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+            }
+            if(carMieleage != null && carMieleage > 1000000000000){
+                return BadRequest(new { message = "Такую машину можно на свалку" });
+            }
+
             var newOrder = new Order() { 
                 Client = clientId, 
-                Technician = technician, 
-                Start = DateOnly.FromDateTime(start), 
+                Technician = technician,
                 FinalPrice = finalPrice, 
                 Car = car,
-                CarMileage= carMieleage, 
-                AppointmentTime= DateOnly.FromDateTime(appointmentTime) 
+                CarMileage= carMieleage
             };
+            if(start.HasValue)
+            {
+                newOrder.Start = DateOnly.FromDateTime(start.Value);
+            }
             if(end.HasValue)
             {
                 newOrder.End = DateOnly.FromDateTime(end.Value);
             }
+            if(appointmentTime.HasValue)
+            {
+                newOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+            }
             _context.Orders.Add(newOrder);
             _context.SaveChanges();
-            return newOrder;
+            return Ok(newOrder);
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateOrder(int id, int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
+        public ActionResult<Order> UpdateOrder(int id, int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
+            if(finalPrice != null && finalPrice > 10000000){
+                return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+            }
+            if(carMieleage != null && carMieleage > 1000000000000){
+                return BadRequest(new { message = "Такую машину можно на свалку" });
+            }
+
             var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
             if(updOrder != null)
             {
@@ -78,13 +103,13 @@ namespace AutoserviceBackCSharp.Controllers
                     updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
                 }
                 _context.SaveChanges();
-                return true;
+                return Ok(new { order = updOrder, message = "Заказ успешно обновлен" });
             }
-            return false;
+            return NotFound(new { message = "Заказ не найден" });
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteOrder(int id)
+        public ActionResult DeleteOrder(int id)
         {
             var order = _context.Orders.SingleOrDefault(order => order.Id == id);
 
@@ -94,10 +119,10 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.Works.Where(wr => wr.Order == id).ToList().ForEach(wr => _context.Remove(wr));
                 _context.Remove(order);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Заказ успешно удален" });
             }
 
-            return false;
+            return NotFound(new { message = "Заказ не найден" });
         }
     }
 }

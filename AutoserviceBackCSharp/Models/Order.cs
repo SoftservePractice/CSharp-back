@@ -19,9 +19,9 @@ public partial class Order
 
     public int? Car { get; set; }
 
-    public int CarMileage { get; set; }
+    public int? CarMileage { get; set; }
 
-    public DateOnly AppointmentTime { get; set; }
+    public DateOnly? AppointmentTime { get; set; }
 
     public virtual Car? CarNavigation { get; set; }
 
