@@ -39,7 +39,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostDetail(string model, string vendorCode, string description, string compatibleVehicles)
+        public ActionResult PostDetail(string model, string vendorCode, string description, string compatibleVehicles, int catId)
         {
             if (model.Length < 3 || model.Length > 32)
             {
@@ -62,7 +62,8 @@ namespace AutoserviceBackCSharp.Controllers
                 Model = model, 
                 VendorCode = vendorCode, 
                 Description = description, 
-                CompatibleVehicles = compatibleVehicles
+                CompatibleVehicles = compatibleVehicles,
+                Category = catId
             };
 
             _context.Details.Add(detail);
@@ -72,7 +73,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPatch("{id}")]
-        public ActionResult<Detail> UpdateDetail(int id, string? model, string? vendorCode, string? description, string? compatibleVehicles)
+        public ActionResult<Detail> UpdateDetail(int id, string? model, string? vendorCode, string? description, string? compatibleVehicles, int? catId)
         {
             if (model != null && (model.Length < 3 || model.Length > 32))
             {
@@ -98,6 +99,7 @@ namespace AutoserviceBackCSharp.Controllers
                 detail.VendorCode = vendorCode ?? detail.VendorCode;
                 detail.Description = description ?? detail.Description;
                 detail.CompatibleVehicles = compatibleVehicles ?? detail.CompatibleVehicles;
+                detail.Category = catId ?? detail.Category;
                 _context.SaveChanges();
                 return Ok(new { message = "Подробности успешно обновлены" });
             }

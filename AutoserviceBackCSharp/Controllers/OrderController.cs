@@ -53,7 +53,7 @@ namespace AutoserviceBackCSharp.Controllers
                 Technician = technician,
                 FinalPrice = finalPrice, 
                 Car = car,
-                CarMileage= carMieleage
+                CarMileage = carMieleage
             };
             if(start.HasValue)
             {
