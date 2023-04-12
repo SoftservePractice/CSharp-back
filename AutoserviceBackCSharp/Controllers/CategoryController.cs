@@ -77,7 +77,8 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (category != null)
             {
-                _context.Categories.Where(val => val.ParentCategory == id).ToList().ForEach(val => _context.Remove(val));
+                _context.Categories.Where(val => val.ParentCategory == id).ToList().ForEach(val => { _context.Details.Where(vl => vl.Category == val.Id).ToList().ForEach(vl => _context.Remove(vl)); _context.Remove(val); });
+                _context.Details.Where(val => val.Category == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(category);
                 _context.SaveChanges();
                 return Ok(new { message = "Категория успешна удалена" });
