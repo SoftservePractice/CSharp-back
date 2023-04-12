@@ -7,13 +7,13 @@ namespace AutoserviceBackCSharp.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class TechinicianController : ControllerBase
+    public class TechnicianController : ControllerBase
     {
-        private readonly ILogger<TechinicianController> _logger;
+        private readonly ILogger<TechnicianController> _logger;
         private readonly PracticedbContext _context;
 
 
-        public TechinicianController(ILogger<TechinicianController> logger, PracticedbContext context)
+        public TechnicianController(ILogger<TechnicianController> logger, PracticedbContext context)
         {
             _logger = logger;
             _context = context;

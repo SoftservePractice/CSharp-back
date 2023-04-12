@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AutoserviceBackCSharp.Models;
 
@@ -14,8 +15,8 @@ public partial class Work
     public float WorkPrice { get; set; }
 
     public int Order { get; set; }
-
+    [JsonIgnore]
     public virtual Detail? DetailNavigation { get; set; }
-
+    [JsonIgnore]
     public virtual Order OrderNavigation { get; set; } = null!;
 }

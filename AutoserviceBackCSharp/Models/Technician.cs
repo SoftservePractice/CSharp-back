@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AutoserviceBackCSharp.Models;
 
@@ -18,6 +19,6 @@ public partial class Technician
     public DateOnly StartWorkInCompany { get; set; }
 
     public float Raiting { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

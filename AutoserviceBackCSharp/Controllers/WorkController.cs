@@ -57,10 +57,11 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("WorkPrice не может быть меньше 0");
             }
+
             var newWork = new Work() { Detail = detail, DetailPrice = detailPrice, WorkPrice = workPrice, Order = order };
             _context.Works.Add(newWork);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(newWork), new { newWork = newWork, message = "Work успешно созданa" }); ;
+            return CreatedAtAction(nameof(PostWork), new { newWork = newWork, message = "Work успешно созданa" }); ;
         }
 
         [HttpPatch("{id}")]
