@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoserviceBackCSharp", "AutoserviceBackCSharp\AutoserviceBackCSharp.csproj", "{3099324A-EC1B-4DCF-8DA5-CF6D3139C3FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoserviceBackCSharp", "AutoserviceBackCSharp\AutoserviceBackCSharp.csproj", "{3099324A-EC1B-4DCF-8DA5-CF6D3139C3FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoserviceBackUnitTests", "AutoserviceBackUnitTests\AutoserviceBackUnitTests.csproj", "{A0122AFB-3C3C-4292-B575-F328CE3ECD3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3099324A-EC1B-4DCF-8DA5-CF6D3139C3FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3099324A-EC1B-4DCF-8DA5-CF6D3139C3FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3099324A-EC1B-4DCF-8DA5-CF6D3139C3FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0122AFB-3C3C-4292-B575-F328CE3ECD3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0122AFB-3C3C-4292-B575-F328CE3ECD3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0122AFB-3C3C-4292-B575-F328CE3ECD3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0122AFB-3C3C-4292-B575-F328CE3ECD3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

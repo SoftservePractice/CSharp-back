@@ -40,7 +40,15 @@ namespace AutoserviceBackCSharp.Controllers
         {
             
             
-
+            if(string.IsNullOrWhiteSpace(name))
+            {
+                return BadRequest("Имя техника не может быть пустым");
+            }
+            
+            if(string.IsNullOrWhiteSpace(specialization))
+            {
+                return BadRequest("Специализация техника не может быть пустым");
+            }
 
 
             if (name != null && !name.All(x => char.IsLetter(x)))
@@ -50,7 +58,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (specialization != null && !specialization.All(x => char.IsLetter(x)))
             {
-                return BadRequest("специализация техника может содержать только буквы");
+                return BadRequest("Специализация техника может содержать только буквы");
             }
 
             if (name != null && (name.Length > 32 || name.Length < 3))
@@ -106,7 +114,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (specialization != null && !specialization.All(x => char.IsLetter(x)))
             {
-                return BadRequest("специализация техника может содержать только буквы");
+                return BadRequest("Специализация техника может содержать только буквы");
             }
 
             if (name!=null&&(name.Length > 32 ||  name.Length < 3))
