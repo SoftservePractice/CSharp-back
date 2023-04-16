@@ -43,15 +43,22 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostClient([FromBody] Client clientfrombody)
+        public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            var client = clientfrombody;
-            client.IsConfirm = false;
-            
-            if(!PhoneValidator.Validate(client.Phone)){
+            if (!PhoneValidator.Validate(phone))
+            {
                 return BadRequest("Номер телефона должен быть корректным");
             }
-            
+
+            var client = new Client()
+            {
+                Name = name ?? null,
+                Phone = phone ?? null,
+                Email = email ?? null,
+                TelegramId = telegramId ?? null,
+                IsConfirm = false
+            };
+
             _context.Clients.Add(client);
             _context.SaveChanges();
 

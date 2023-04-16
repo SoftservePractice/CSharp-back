@@ -50,7 +50,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Номер машины некорректный");
             }
-            if (DateOnly.FromDateTime(year).Year < 1900 || DateOnly.FromDateTime(year).Year > 2023)
+            if (DateOnly.FromDateTime(year).Year < 1900)
             {
                 return BadRequest("Год изготовления машины некорректный");
             }
