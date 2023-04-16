@@ -49,10 +49,10 @@ namespace AutoserviceBackCSharp.Controllers
             else
             {
                 if(finalPrice != null && finalPrice > 10000000){
-                    return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+                    return BadRequest(new { message = "Некорректное значение цены" });
                 }
                 if(carMieleage != null && carMieleage > 1000000000000){
-                    return BadRequest(new { message = "Такую машину можно на свалку" });
+                    return BadRequest(new { message = "Некорректное значение километража машины" });
                 }
 
                 var newOrder = new Order() { 
@@ -91,10 +91,10 @@ namespace AutoserviceBackCSharp.Controllers
             else
             {
                 if(finalPrice != null && finalPrice > 10000000){
-                    return BadRequest(new { message = "Ну слишком чет большая сумма)" });
+                    return BadRequest(new { message = "Некорректное значение цены" });
                 }
                 if(carMieleage != null && carMieleage > 1000000000000){
-                    return BadRequest(new { message = "Такую машину можно на свалку" });
+                    return BadRequest(new { message = "Некорректное значение километража машины" });
                 }
 
                 var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
