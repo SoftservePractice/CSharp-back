@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMvc().AddJsonOptions(o => {
-    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 builder.Services.AddControllers();
 builder.Services.AddMvc(options =>

@@ -21,7 +21,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         }
 
         [Test]
-        public void CarController_Get()
+        public void WorkControllerGet_TestNoErrors()
         {
             carController = new CarController(logger, context);
             var result = carController.GetCars();
