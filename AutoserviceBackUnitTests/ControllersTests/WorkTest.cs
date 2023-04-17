@@ -38,13 +38,17 @@ namespace AutoserviceBackUnitTests.ControllersTests
         public void WorkControllerGet_TestIsTableHasRows()
         {
             var result = carController.GetCars().Result;
-            if(result == null)
+            OkObjectResult okObjRes;
+            try
             {
-                Assert.Fail();
+                okObjRes = (OkObjectResult)result!;
+                Assert.IsTrue(okObjRes.Value is Array && ((Car[])okObjRes.Value).Length > 0);
             }
-            var okObjRes = (OkObjectResult)result;
-            var tedfs = ((Car[])okObjRes.Value);
-            Assert.IsTrue(okObjRes.Value is Array && ((Car[])okObjRes.Value).Length > 0);
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+           
         }
     }
 }
