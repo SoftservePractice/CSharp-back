@@ -15,6 +15,5 @@ public partial class Category
     public virtual ICollection<Detail> Details { get; } = new List<Detail>();
     [JsonIgnore]
     public virtual ICollection<Category> InverseParentCategoryNavigation { get; } = new List<Category>();
-    [JsonIgnore]
     public virtual Category? ParentCategoryNavigation { get; set; }
 }

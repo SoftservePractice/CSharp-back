@@ -23,7 +23,7 @@ namespace AutoserviceBackCSharp.Controllers
             var orders = _context.Orders.Where(
                 order =>
                     (clientId == null || order.Client == clientId)
-            )!;
+            )!.ToArray();
 
             return Ok(orders);
         }

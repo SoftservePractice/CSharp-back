@@ -17,8 +17,6 @@ public partial class Car
     public string CarNumber { get; set; } = null!;
 
     public int Client { get; set; }
-
-    [JsonIgnore]
     public virtual Client ClientNavigation { get; set; } = null!;
     [JsonIgnore]
 

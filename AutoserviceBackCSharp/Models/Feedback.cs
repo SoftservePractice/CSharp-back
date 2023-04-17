@@ -15,8 +15,6 @@ public partial class Feedback
     public bool? Rating { get; set; }
 
     public int Order { get; set; }
-    [JsonIgnore]
     public virtual Client ClientNavigation { get; set; } = null!;
-    [JsonIgnore]
     public virtual Order OrderNavigation { get; set; } = null!;
 }

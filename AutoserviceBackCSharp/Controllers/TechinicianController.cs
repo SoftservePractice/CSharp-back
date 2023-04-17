@@ -22,7 +22,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet]
         public IEnumerable<Technician> GetTechnicians()
         {
-            return _context.Technicians;
+            return _context.Technicians.ToArray();
         }
         [HttpGet("{id}")]
         public ActionResult<Technician> GetTechnician(int id)
@@ -102,10 +102,6 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Technician> UpdateTechnician(int id, string? name, string? phone, string? specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
-
-            
-
-
 
             if (name != null && !name.All(x => char.IsLetter(x)))
             {

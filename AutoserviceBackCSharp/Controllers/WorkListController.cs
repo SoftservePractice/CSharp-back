@@ -25,7 +25,7 @@ namespace AutoserviceBackCSharp.Controllers
                     && (description == null || workList.Description == description)
                     && (price == null || workList.Price == price)
                     && (duration == null || workList.Duration == duration)
-            )!;
+            )!.ToArray();
         }
 
         [HttpGet("{id}")]
@@ -84,18 +84,20 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteWorkList(int id)
+        public ActionResult DeleteWorkList(int id)
         {
             var worklist = _context.WorkLists.SingleOrDefault(worklist => worklist.Id == id);
 
             if (worklist != null)
             {
+                _context.Works.Where(val => val.WorkList == id).ToList().ForEach(val => _context.Remove(val));
                 _context.Remove(worklist);
                 _context.SaveChanges();
-                return true;
+
+                return Ok(new { message = "WorkList успешно ликвидирован" });
             }
 
-            return false;
+            return NotFound(new { message = "WorkList не найден" }); ;
         }
     }
 }

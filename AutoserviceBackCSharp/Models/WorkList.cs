@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AutoserviceBackCSharp.Models;
 
@@ -14,4 +15,6 @@ public partial class WorkList
     public float? Price { get; set; }
 
     public float? Duration { get; set; }
+    [JsonIgnore]
+    public virtual ICollection<Work> Works { get; } = new List<Work>();
 }

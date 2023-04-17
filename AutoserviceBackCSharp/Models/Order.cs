@@ -23,13 +23,10 @@ public partial class Order
     public int? CarMileage { get; set; }
 
     public DateOnly? AppointmentTime { get; set; }
-    [JsonIgnore]
     public virtual Car? CarNavigation { get; set; }
-    [JsonIgnore]
     public virtual Client ClientNavigation { get; set; } = null!;
     [JsonIgnore]
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
-    [JsonIgnore]
     public virtual Technician? TechnicianNavigation { get; set; }
     [JsonIgnore]
     public virtual ICollection<Work> Works { get; } = new List<Work>();

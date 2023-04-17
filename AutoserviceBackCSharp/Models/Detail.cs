@@ -17,7 +17,6 @@ public partial class Detail
     public string CompatibleVehicles { get; set; } = null!;
 
     public int Category { get; set; }
-    [JsonIgnore]
     public virtual Category CategoryNavigation { get; set; } = null!;
     [JsonIgnore]
     public virtual ICollection<DetailList> DetailLists { get; } = new List<DetailList>();
