@@ -28,7 +28,7 @@ namespace AutoserviceBackCSharp.Controllers
                 && (content == null || feedbacks.Content == content)
                 && (order == null || feedbacks.Order == order)
 
-                )!;
+                )!.ToArray();
             return Ok(feedbacks);
         }
         [HttpGet("{id}")]
@@ -43,7 +43,7 @@ namespace AutoserviceBackCSharp.Controllers
 
         }
         [HttpPost]
-        public Feedback PostFeedback(int client, string? content, int order, bool? rating)
+        public ActionResult<Feedback> PostFeedback(int client, string? content, int order, bool? rating)
         {
             var feedback = new Feedback() 
             {
@@ -54,7 +54,7 @@ namespace AutoserviceBackCSharp.Controllers
             };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
-            return feedback;
+            return Ok(feedback);
         }
 
         [HttpPatch("{id}")]
