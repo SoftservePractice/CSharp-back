@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoserviceBackCSharp.Controllers;
+﻿using AutoserviceBackCSharp.Controllers;
 using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AutoserviceBackUnitTests.ControllersTests
 {
@@ -17,17 +11,40 @@ namespace AutoserviceBackUnitTests.ControllersTests
         [SetUp]
         public void Setup()
         {
-            carController = new CarController(null, new PracticedbContext(null, new AutoserviceBackCSharp.Singletone.DbConnection()));
+            carController = new CarController(null, PublicContext.context);
         }
 
+        
         [Test]
-        public void WorkControllerGet_TestNoErrors()
+        public void WorkControllerGet_TestNoExceptions()
         {
-            carController = new CarController(logger, context);
-            var result = carController.GetCars();
-
-            Assert.Pass("123", result);
+            Assert.DoesNotThrow(() => carController.GetCars());
         }
+        [Test]
+        public void WorkControllerGet_TestNoNullRes()
+        {
+            var result = carController.GetCars().Result;
 
+            Assert.IsTrue(result != null);
+        }
+        [Test]
+        public void WorkControllerGet_TestIsOkResult()
+        {
+            var result = carController.GetCars().Result;
+
+            Assert.IsTrue(result is OkObjectResult);
+        }
+        [Test]
+        public void WorkControllerGet_TestIsTableHasRows()
+        {
+            var result = carController.GetCars().Result;
+            if(result == null)
+            {
+                Assert.Fail();
+            }
+            var okObjRes = (OkObjectResult)result;
+            var tedfs = ((Car[])okObjRes.Value);
+            Assert.IsTrue(okObjRes.Value is Array && ((Car[])okObjRes.Value).Length > 0);
+        }
     }
 }
