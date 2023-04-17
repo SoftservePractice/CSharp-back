@@ -37,7 +37,7 @@ namespace AutoserviceBackCSharp.Controllers
             var feedback = _context.Feedbacks.SingleOrDefault(feedback => feedback.Id == id);
             if (feedback == null)
             {
-                return NotFound(new { message = "Обратная связь не найден" });
+                return NotFound(new { message = "Обратная связь не найдена" });
             }
             return Ok(feedback);
 
@@ -69,10 +69,10 @@ namespace AutoserviceBackCSharp.Controllers
                 feedback.Order = order ?? feedback.Order;
                 feedback.Rating = rating ?? feedback.Rating;
                 _context.SaveChanges();
-                return Ok(feedback);
+                return Ok(new {message = "Обратная связь успешно обновлена" });
 
             }
-            return NotFound(new { message = "Обратная связь не найден" });
+            return NotFound(new { message = "Обратная связь не найдена" });
 
         }
 
@@ -85,11 +85,11 @@ namespace AutoserviceBackCSharp.Controllers
 
                 _context.Remove(feedback);
                 _context.SaveChanges();
-                return Ok(new { message = "Обратная связь успешно удален" });
+                return Ok(new { message = "Обратная связь успешно удалена" });
             }
 
 
-            return NotFound(new { message = "Обратная связь не найден" });
+            return NotFound(new { message = "Обратная связь не найдена" });
         }
 
     }
