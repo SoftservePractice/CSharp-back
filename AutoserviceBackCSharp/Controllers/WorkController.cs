@@ -40,7 +40,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public ActionResult PostWork(int detail, float detailPrice, int order, float workPrice)
+        public ActionResult PostWork(int detail, float detailPrice, int order, float workPrice, int work)
         {
 
             if (detail < 0)
@@ -53,9 +53,14 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("DetailPrice не может быть меньше 0");
             }
 
+            if (work < 0)
+            {
+                return BadRequest("Work не может быть меньше 0");
+            }
+
             if (order < 0)
             {
-                return BadRequest("order не может быть меньше 0");
+                return BadRequest("Order не может быть меньше 0");
             }
 
             if (workPrice < 0)
@@ -63,14 +68,14 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("WorkPrice не может быть меньше 0");
             }
 
-            var newWork = new Work() { Detail = detail, DetailPrice = detailPrice, WorkPrice = workPrice, Order = order };
+            var newWork = new Work() { Detail = detail, DetailPrice = detailPrice, WorkPrice = workPrice, Order = order, WorkList = work };
             _context.Works.Add(newWork);
             _context.SaveChanges();
             return CreatedAtAction(nameof(PostWork), new { newWork = newWork, message = "Work успешно созданa" }); ;
         }
 
         [HttpPatch("{id}")]
-        public ActionResult UpdateWork(int id, int? detail, float? detailPrice, float? workPrice, int? order)
+        public ActionResult UpdateWork(int id, int? detail, float? detailPrice, float? workPrice, int? order, int? work)
         {
 
             if (detail!= null && detail < 0)
@@ -85,7 +90,12 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (order != null && order < 0)
             {
-                return BadRequest("order не может быть меньше 0");
+                return BadRequest("Order не может быть меньше 0");
+            }
+
+            if (work != null && work < 0)
+            {
+                return BadRequest("Work не может быть меньше 0");
             }
 
             if (workPrice != null && workPrice < 0)
@@ -99,6 +109,7 @@ namespace AutoserviceBackCSharp.Controllers
                 updWork.DetailPrice = detailPrice ?? updWork.DetailPrice;
                 updWork.WorkPrice = workPrice ?? updWork.WorkPrice;
                 updWork.Order = order ?? updWork.Order;
+                updWork.WorkList = work ?? updWork.WorkList;
                 _context.SaveChanges();
                 return Ok(new { updWork = updWork, message = "Техник успешно обновлен" }); 
             }
@@ -114,7 +125,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(work);
                 _context.SaveChanges();
-                return Ok(new { message = "WOrk успешно ликвидирован" }); 
+                return Ok(new { message = "Work успешно ликвидирован" }); 
             }
 
             return NotFound(new { message = "Work не найден" }); ;

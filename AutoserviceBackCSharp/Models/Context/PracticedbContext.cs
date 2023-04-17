@@ -281,11 +281,14 @@ public partial class PracticedbContext : DbContext
 
             entity.HasIndex(e => e.Order, "Work_fk1");
 
+            entity.HasIndex(e => e.WorkList, "Work_fk2");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Detail).HasColumnName("detail");
             entity.Property(e => e.DetailPrice).HasColumnName("detailPrice");
             entity.Property(e => e.Order).HasColumnName("order");
             entity.Property(e => e.WorkPrice).HasColumnName("workPrice");
+            entity.Property(e => e.WorkList).HasColumnName("work");
 
             entity.HasOne(d => d.DetailNavigation).WithMany(p => p.Works)
                 .HasForeignKey(d => d.Detail)
@@ -295,6 +298,11 @@ public partial class PracticedbContext : DbContext
                 .HasForeignKey(d => d.Order)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Work_fk1");
+
+            entity.HasOne(d => d.WorkListNavigation).WithMany(p => p.Works)
+                .HasForeignKey(d => d.WorkList)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Work_fk2");
         });
 
         modelBuilder.Entity<WorkList>(entity =>

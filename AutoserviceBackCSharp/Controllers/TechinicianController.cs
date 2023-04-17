@@ -103,10 +103,6 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var updTechnician = _context.Technicians.SingleOrDefault(techi => techi.Id == id);
 
-            
-
-
-
             if (name != null && !name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
