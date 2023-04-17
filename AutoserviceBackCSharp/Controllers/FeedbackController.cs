@@ -43,13 +43,18 @@ namespace AutoserviceBackCSharp.Controllers
 
         }
         [HttpPost]
-        public ActionResult<Feedback> PostFeedback(int client, string? content, int order, bool? rating)
+        public Feedback PostFeedback(int client, string? content, int order, bool? rating)
         {
-            var feedback = new Feedback() { Client = client, Content = content, Order = order, Rating = rating };
+            var feedback = new Feedback() 
+            {
+                Client = client,
+                Content = content,
+                Order = order, 
+                Rating = rating 
+            };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
             return feedback;
-
         }
 
         [HttpPatch("{id}")]
@@ -82,9 +87,9 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return Ok(new { message = "Обратная связь успешно удален" });
             }
-            
 
-           return NotFound(new { message = "Обратная связь не найден" });
+
+            return NotFound(new { message = "Обратная связь не найден" });
         }
 
     }
