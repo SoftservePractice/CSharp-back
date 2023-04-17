@@ -50,7 +50,7 @@ namespace AutoserviceBackCSharp.Controllers
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
-            return newWarehouse;
+            return Ok(new { warehouse = newWarehouse, message = "Склад успешно обновлен" }); ;
         }
 
         [HttpPatch("{id}")]
@@ -72,7 +72,7 @@ namespace AutoserviceBackCSharp.Controllers
                 updWarehouse.Address = adress ?? updWarehouse.Address;
                 updWarehouse.Name = name ?? updWarehouse.Name;
                 _context.SaveChanges();
-                return Ok(new { updWarehouse = updWarehouse, message = "Склад успешно обновлен" }); ;
+                return Ok(new { warehouse = updWarehouse, message = "Склад успешно обновлен" }); ;
             }
             return BadRequest("Склад не найден");
         }
