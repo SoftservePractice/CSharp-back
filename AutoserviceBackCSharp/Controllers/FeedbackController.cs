@@ -69,7 +69,7 @@ namespace AutoserviceBackCSharp.Controllers
                 feedback.Order = order ?? feedback.Order;
                 feedback.Rating = rating ?? feedback.Rating;
                 _context.SaveChanges();
-                return Ok(new { client = client, message = "Обратная связь успешно обновлен" });
+                return Ok(feedback);
 
             }
             return NotFound(new { message = "Обратная связь не найден" });
