@@ -28,7 +28,7 @@ namespace AutoserviceBackCSharp.Controllers
                 && (content == null || feedbacks.Content == content)
                 && (order == null || feedbacks.Order == order)
 
-                )!.ToArray();
+                )!;
             return Ok(feedbacks);
         }
         [HttpGet("{id}")]
@@ -43,12 +43,12 @@ namespace AutoserviceBackCSharp.Controllers
 
         }
         [HttpPost]
-        public ActionResult PostFeedback(int client, string? content, int order)
+        public ActionResult<Feedback> PostFeedback(int client, string? content, int order, bool? rating)
         {
-            var feedback = new Feedback() { Client = client, Content = content, Order = order };
+            var feedback = new Feedback() { Client = client, Content = content, Order = order, Rating = rating };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(PostFeedback), new { feedback = feedback, message = "Обратная связь успешно создан" });
+            return feedback;
 
         }
 
