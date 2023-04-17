@@ -19,17 +19,17 @@ namespace AutoserviceBackCSharp.Controllers
             _context = context;
         }
         [HttpGet]
-        public IEnumerable<DetailList> GetDetailLists(int? warId)
+        public ActionResult<DetailList> GetDetailLists(int? warId)
         {
-            return _context.DetailLists.Where(
+            return Ok(_context.DetailLists.Where(
                 detailList =>
-                (warId == null || detailList.Warehouse == warId))!;
+                (warId == null || detailList.Warehouse == warId))!.ToArray());
         }
 
         [HttpGet("{id}")]
-        public DetailList GetDetailList(int id)
+        public ActionResult<DetailList> GetDetailList(int id)
         {
-            return _context.DetailLists.SingleOrDefault(detailList => detailList.Id == id)!;
+            return Ok(_context.DetailLists.SingleOrDefault(detailList => detailList.Id == id)!);
         }
 
         [HttpPost]
@@ -79,7 +79,7 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteDetailList(int id)
+        public ActionResult DeleteDetailList(int id)
         {
             var detailList = _context.DetailLists.SingleOrDefault(detailList => detailList.Id == id);
 
@@ -87,10 +87,10 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(detailList);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "DetailList успешно ликвидирован" });
             }
 
-            return false;
+            return NotFound(new { message = "DetailList не найден" }); ;
         }
     }
 }

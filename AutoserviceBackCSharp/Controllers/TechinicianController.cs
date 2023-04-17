@@ -22,7 +22,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet]
         public IEnumerable<Technician> GetTechnicians()
         {
-            return _context.Technicians;
+            return _context.Technicians.ToArray();
         }
         [HttpGet("{id}")]
         public ActionResult<Technician> GetTechnician(int id)

@@ -25,7 +25,7 @@ namespace AutoserviceBackCSharp.Controllers
                     && (description == null || workList.Description == description)
                     && (price == null || workList.Price == price)
                     && (duration == null || workList.Duration == duration)
-            )!;
+            )!.ToArray();
         }
 
         [HttpGet("{id}")]

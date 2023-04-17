@@ -16,6 +16,14 @@ namespace AutoserviceBackCSharp.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public ActionResult<IEnumerable<Car>> GetCars()
+        {
+            var cars = _context.Cars.ToArray();
+
+            return Ok(cars);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Car> GetCar(int id)
         {
@@ -25,14 +33,6 @@ namespace AutoserviceBackCSharp.Controllers
                 return NotFound(new { message = "Автомобиль не найден" });
             }
             return Ok(car);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<Car>> GetCars()
-        {
-            var cars = _context.Cars;
-
-            return Ok(cars);
         }
 
         [HttpPost]

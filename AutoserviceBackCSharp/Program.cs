@@ -1,5 +1,6 @@
 using AutoserviceBackCSharp.Controllers;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

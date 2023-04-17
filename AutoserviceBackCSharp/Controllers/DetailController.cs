@@ -23,7 +23,7 @@ namespace AutoserviceBackCSharp.Controllers
             var details = _context.Details.Where(
                 detail =>
                     (catId == null || detail.Category == catId)
-            )!;
+            )!.ToArray();
 
             return Ok(details);
         }

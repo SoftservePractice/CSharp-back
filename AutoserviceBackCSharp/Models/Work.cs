@@ -10,7 +10,7 @@ public partial class Work
     public int Id { get; set; }
 
     [Range(0,int.MaxValue,ErrorMessage = "Value must be non-negative")]
-    public int? Detail { get; set; }
+    public virtual int? Detail { get; set; }
 
     [Range(0, float.MaxValue, ErrorMessage = "Value must be non-negative")]
     public float? DetailPrice { get; set; }
@@ -21,12 +21,9 @@ public partial class Work
 
     [Required(ErrorMessage = "Не указана Order")]
     [Range(0, int.MaxValue, ErrorMessage = "Value must be non-negative")]
-    public int Order { get; set; }
-    public int WorkList { get; set; }
-    [JsonIgnore]
+    public virtual int Order { get; set; }
+    public virtual int WorkList { get; set; }
     public virtual Detail? DetailNavigation { get; set; }
-    [JsonIgnore]
     public virtual Order OrderNavigation { get; set; } = null!;
-    [JsonIgnore]
     public virtual WorkList WorkListNavigation { get; set; } = null!;
 }

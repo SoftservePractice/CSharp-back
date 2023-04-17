@@ -21,7 +21,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet]
         public IEnumerable<Warehouse> GetWarehouses()
         {
-            return _context.Warehouses;
+            return _context.Warehouses.ToArray();
         }
 
         [HttpGet("{id}")]

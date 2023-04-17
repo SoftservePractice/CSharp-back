@@ -39,10 +39,12 @@ public partial class PracticedbContext : DbContext
     public virtual DbSet<WorkList> WorkLists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql(_conString, ServerVersion.Parse("8.0.29-mysql"));
+        => optionsBuilder.UseMySql(_conString, ServerVersion.Parse("8.0.29-mysql")).UseLazyLoadingProxies();
+    //
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");

@@ -21,7 +21,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Category>> GetCategory(string? name, int? parentCategory)
         {
-            return _context.Categories;
+            return _context.Categories.ToArray();
         }
 
         [HttpGet("~/[controller]/{id}")]

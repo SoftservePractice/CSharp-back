@@ -26,7 +26,7 @@ namespace AutoserviceBackCSharp.Controllers
                     && (phone == null || client.Phone == phone)
                     && (email == null || client.Email == email)
                     && (telegramId == null || client.TelegramId == telegramId)
-            )!;
+            )!.ToArray();
 
             return Ok(clients);
         }

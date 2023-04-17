@@ -28,7 +28,7 @@ namespace AutoserviceBackCSharp.Controllers
                 && (content == null || feedbacks.Content == content)
                 && (order == null || feedbacks.Order == order)
 
-                )!;
+                )!.ToArray();
             return Ok(feedbacks);
         }
         [HttpGet("{id}")]

@@ -1,5 +1,6 @@
 ﻿using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -23,9 +24,9 @@ namespace AutoserviceBackCSharp.Controllers
             var works = _context.Works.Where(
                 work =>
                     (orderId == null || work.Order == orderId)
-            )!;
+            )!.ToArray();
 
-            return Ok(works);
+            return Ok(works);;
         }
 
         [HttpGet("{id}")]
