@@ -50,7 +50,7 @@ namespace AutoserviceBackCSharp.Controllers
             if (order < 0)
                 return BadRequest("Номер заказа не может быть меньше 0");
 
-            if (rating.HasValue && rating.Value != true && rating.Value != false)
+            if (rating.HasValue && !(rating.Value == true || rating.Value == false))
                 return BadRequest("Оценка можеть быть только false или true");
 
             var feedback = new Feedback() { Client = client, Content = content, Order = order };
