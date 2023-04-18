@@ -25,7 +25,7 @@ namespace AutoserviceBackCSharp.Controllers
                 feedbacks =>
                 (client == null || feedbacks.Client == client)
                 && (content == null || feedbacks.Content == content)
-                && (order == null || feedbacks.Order == order))!;
+                && (order == null || feedbacks.Order == order));
             return Ok(feedbacks);
         }
         [HttpGet("{id}")]
@@ -34,12 +34,12 @@ namespace AutoserviceBackCSharp.Controllers
             var feedback = _context.Feedbacks.SingleOrDefault(feedback => feedback.Id == id);
             if (feedback == null)
                 return NotFound(new { message = "Отзывов пока что нет" });
-            
+
             return Ok(feedback);
         }
 
         [HttpPost]
-        public ActionResult<Feedback> PostFeedback(int client, string? content, int order)
+        public ActionResult<Feedback> PostFeedback(int client, string? content, int order, bool? rating)
         {
             if (client < 0)
                 return BadRequest("ID клиента не может быть меньше 0");
@@ -47,13 +47,16 @@ namespace AutoserviceBackCSharp.Controllers
             if (content != null && (content.Length < 3 || content.Length > 300))
                 return BadRequest("Отзыв должен быть в диапазоне от 3 до 300 символов");
 
-            if(order < 0)
+            if (order < 0)
                 return BadRequest("Номер заказа не может быть меньше 0");
+
+            if (rating.HasValue && rating.Value != true && rating.Value != false)
+                return BadRequest("Оценка можеть быть только false или true");
 
             var feedback = new Feedback() { Client = client, Content = content, Order = order };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
-            return Ok(feedback);
+            return feedback;
         }
 
         [HttpPatch("{id}")]
@@ -68,7 +71,7 @@ namespace AutoserviceBackCSharp.Controllers
             if (order != null && order < 0)
                 return BadRequest("Номер заказа не может быть ниже 0");
 
-            if (rating.HasValue && !(rating.Value || !rating.Value))
+            if (rating.HasValue && rating.Value != true && rating.Value != false)
                 return BadRequest("Оценка должна быть только false или true");
 
             var updFeedback = _context.Feedbacks.SingleOrDefault(fb => fb.Id == id);
@@ -94,7 +97,7 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return Ok(new { message = "Отзыв успешно удален" });
             }
-           return NotFound(new { message = "Отзыв не найден" });
+            return NotFound(new { message = "Отзыв не найден" });
         }
     }
 }
