@@ -71,15 +71,15 @@ namespace AutoserviceBackCSharp.Controllers
             if (rating != null && (rating == false || rating == true))
                 return BadRequest("Оценка должна быть только false или true");
 
-            var feedback = _context.Feedbacks.SingleOrDefault(fb => fb.Id == id);
-            if (feedback != null)
+            var updFeedback = _context.Feedbacks.SingleOrDefault(fb => fb.Id == id);
+            if (updFeedback != null)
             {
-                feedback.Client = client ?? feedback.Client;
-                feedback.Content = content ?? feedback.Content;
-                feedback.Order = order ?? feedback.Order;
-                feedback.Rating = rating ?? feedback.Rating;
+                updFeedback.Client = client ?? updFeedback.Client;
+                updFeedback.Content = content ?? updFeedback.Content;
+                updFeedback.Order = order ?? updFeedback.Order;
+                updFeedback.Rating = rating ?? updFeedback.Rating;
                 _context.SaveChanges();
-                return Ok(new { Client = client, message = "Отзыв обновлен" });
+                return updFeedback;
             }
             return NotFound(new { message = "Отзыв не найден" });
         }
