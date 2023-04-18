@@ -56,7 +56,7 @@ namespace AutoserviceBackCSharp.Controllers
             var feedback = new Feedback() { Client = client, Content = content, Order = order };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
-            return feedback;
+            return Ok(new { message = "Отзыв был оставлен" });
         }
 
         [HttpPatch("{id}")]
@@ -71,7 +71,7 @@ namespace AutoserviceBackCSharp.Controllers
             if (order != null && order < 0)
                 return BadRequest("Номер заказа не может быть ниже 0");
 
-            if (rating.HasValue && rating.Value != true && rating.Value != false)
+            if (rating.HasValue && !(rating.Value == true || rating.Value == false))
                 return BadRequest("Оценка должна быть только false или true");
 
             var updFeedback = _context.Feedbacks.SingleOrDefault(fb => fb.Id == id);
@@ -82,7 +82,7 @@ namespace AutoserviceBackCSharp.Controllers
                 updFeedback.Order = order ?? updFeedback.Order;
                 updFeedback.Rating = rating ?? updFeedback.Rating;
                 _context.SaveChanges();
-                return updFeedback;
+                return Ok(new { message = "Отзыв успешно обновлён" });
             }
             return NotFound(new { message = "Отзыв не найден" });
         }
