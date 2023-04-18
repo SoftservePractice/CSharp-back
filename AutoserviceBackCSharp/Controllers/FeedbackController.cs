@@ -53,7 +53,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             
 
-            var feedback = new Feedback() { Client = client, Content = content, Order = order };
+            var feedback = new Feedback() { Client = client, Content = content, Order = order, Rating = rating };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
             return Ok(new { feedback = feedback, message = "Отзыв успешно добавлен" });
@@ -81,9 +81,9 @@ namespace AutoserviceBackCSharp.Controllers
                 updFeedback.Order = order ?? updFeedback.Order;
                 updFeedback.Rating = rating ?? updFeedback.Rating;
                 _context.SaveChanges();
-                return Ok(new { updFeedback = updFeedback, message = "Отзыв успешно обновлен" });
+                return Ok(new { feedback = updFeedback, message = "Отзыв успешно обновлен" });
             }
-            return NotFound(new { updFeedback = updFeedback, message = "Отзыв не найден" });
+            return NotFound(new { message = "Отзыв не найден" });
         }
 
         [HttpDelete("{id}")]
@@ -94,9 +94,9 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(feedback);
                 _context.SaveChanges();
-                return Ok(new { feedback = feedback, message = "Отзыв успешно удален" });
+                return Ok(new { message = "Отзыв успешно удален" });
             }
-            return NotFound(new { feedback = feedback, message = "Отзыв не найден" });
+            return NotFound(new { message = "Отзыв не найден" });
         }
     }
 }
