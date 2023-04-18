@@ -68,7 +68,7 @@ namespace AutoserviceBackCSharp.Controllers
             if (order != null && order < 0)
                 return BadRequest("Номер заказа не может быть ниже 0");
 
-            if (rating != null && (rating == false || rating == true))
+            if (rating.HasValue && !(rating.Value || !rating.Value))
                 return BadRequest("Оценка должна быть только false или true");
 
             var updFeedback = _context.Feedbacks.SingleOrDefault(fb => fb.Id == id);
