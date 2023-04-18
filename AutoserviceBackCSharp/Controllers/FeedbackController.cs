@@ -92,9 +92,9 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(feedback);
                 _context.SaveChanges();
-                return Ok(new { message = "Обратная связь успешно удален" });
+                return Ok(new { message = "Отзыв успешно удален" });
             }
-           return NotFound(new { message = "Обратная связь не найден" });
+           return NotFound(new { message = "Отзыв не найден" });
         }
     }
 }
