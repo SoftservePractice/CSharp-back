@@ -166,6 +166,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (technician != null)
             {
+                technician.Orders.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(technician);
                 _context.SaveChanges();
                 return Ok(new { message = "Техник успешно ликвидирован" });

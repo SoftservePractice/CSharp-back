@@ -90,7 +90,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (worklist != null)
             {
-                _context.Works.Where(val => val.WorkList == id).ToList().ForEach(val => _context.Remove(val));
+                worklist.Works.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(worklist);
                 _context.SaveChanges();
 

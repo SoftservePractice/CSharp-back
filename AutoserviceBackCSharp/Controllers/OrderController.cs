@@ -128,8 +128,8 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (order != null)
             {
-                _context.Feedbacks.Where(fd => fd.Order == id).ToList().ForEach(fd => _context.Remove(fd));
-                _context.Works.Where(wr => wr.Order == id).ToList().ForEach(wr => _context.Remove(wr));
+                order.Works.ToList().ForEach(x => _context.Remove(x));
+                order.Feedbacks.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(order);
                 _context.SaveChanges();
                 return Ok(new { message = "Заказ успешно удален" });

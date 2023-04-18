@@ -95,9 +95,9 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (client != null)
             {
-                _context.Orders.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
-                _context.Cars.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
-                _context.Feedbacks.Where(val => val.Client == id).ToList().ForEach(val => _context.Remove(val));
+                client.Orders.ToList().ForEach(x => _context.Remove(x));
+                client.Cars.ToList().ForEach(x => _context.Remove(x));
+                client.Feedbacks.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(client);
                 _context.SaveChanges();
                 return Ok(new { message = "Пользователь успешно удален" });

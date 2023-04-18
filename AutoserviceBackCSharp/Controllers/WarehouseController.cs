@@ -84,7 +84,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (warehouse != null)
             {
-
+                warehouse.DetailLists.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(warehouse);
                 _context.SaveChanges();
                 return Ok(new { message = "Склад успешно удален" });

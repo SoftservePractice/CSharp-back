@@ -33,7 +33,7 @@ namespace AutoserviceBackCSharp.Controllers
             var detail = _context.Details.SingleOrDefault(detail => detail.Id == id)!;
             if (detail == null)
             {
-                return NotFound(new { message = "ѕодробности не найдены" });
+                return NotFound(new { message = "Detail не найден" });
             }
             return Ok(detail);
         }
@@ -69,7 +69,7 @@ namespace AutoserviceBackCSharp.Controllers
             _context.Details.Add(detail);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "ѕодробности успешно созданы" });
+            return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "Detail успешно создан" });
         }
 
         [HttpPatch("{id}")]
@@ -101,9 +101,9 @@ namespace AutoserviceBackCSharp.Controllers
                 detail.CompatibleVehicles = compatibleVehicles ?? detail.CompatibleVehicles;
                 detail.Category = catId ?? detail.Category;
                 _context.SaveChanges();
-                return Ok(new { message = "ѕодробности успешно обновлены" });
+                return Ok(new { message = "Detail успешно обновлены" });
             }
-            return NotFound(new { message = "ѕодробности не найдены" });
+            return NotFound(new { message = "Detail не найдены" });
         }
 
         [HttpDelete("{id}")]
@@ -113,13 +113,14 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (detail != null)
             {
-                _context.DetailLists.Where(val => val.Detail == id).ToList().ForEach(val => _context.Remove(val));
+                detail.Works.ToList().ForEach(x => _context.Remove(x));
+                detail.DetailLists.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(detail);
                 _context.SaveChanges();
-                return Ok(new { message = "ѕодробности успешно удалены" });
+                return Ok(new { message = "Detail успешно удален" });
             }
 
-            return NotFound(new { message = "ѕодробности не найдены" });
+            return NotFound(new { message = "Detail не найден" });
         }
     }
 }
