@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace AutoserviceBackCSharp.Models;
 
@@ -8,6 +9,7 @@ public partial class Client
 {
     public int Id { get; set; }
 
+    [StringLength(50, MinimumLength = 3, ErrorMessage = "Недопустимая длина имени")]
     public string? Name { get; set; } = null!;
 
     public string? Phone { get; set; }

@@ -4,28 +4,25 @@ namespace AutoserviceBackCSharp.Validation
     {
         private static readonly PhoneNumbers.PhoneNumberUtil phoneNumberUtil;
 
-        static PhoneValidator() { 
+        static PhoneValidator()
+        {
             phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
         }
 
         public static bool Validate(string? phone)
         {
-            if (phone != null)
+            if (phone == null)
+                return true;
+
+            try
             {
-                try
-                {
-                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                return phoneNumberUtil.IsValidNumber(phoneNumber);
             }
-            return true;
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

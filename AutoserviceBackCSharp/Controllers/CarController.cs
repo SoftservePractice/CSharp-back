@@ -50,7 +50,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Номер машины некорректный");
             }
-            if (DateOnly.FromDateTime(year).Year < 1900)
+            if (DateOnly.FromDateTime(year).Year < 1900 || DateOnly.FromDateTime(year).Year > DateTime.Now.Year)
             {
                 return BadRequest("Год изготовления машины некорректный");
             }
@@ -90,11 +90,11 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Номер машины некорректный");
             }
-            if (year != null && (DateOnly.FromDateTime(year.Value).Year < 1900 || DateOnly.FromDateTime(year.Value).Year > 2023))
+            if (year != null && (DateOnly.FromDateTime(year.Value).Year < 1900 || DateOnly.FromDateTime(year.Value).Year > DateTime.Now.Year))
             {
                 return BadRequest("Год изготовления машины некорректный");
             }
-            if (clientId != null && (_context.Clients.SingleOrDefault(client => client.Id == id) == null))
+            if (clientId != null && (_context.Clients.Where(client => client.Id == clientId).SingleOrDefault() == null))
             {
                 return NotFound(new { message = "Пользователя с таким ID нет" });
             }
