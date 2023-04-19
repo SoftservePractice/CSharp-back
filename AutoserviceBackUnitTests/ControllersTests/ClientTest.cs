@@ -11,7 +11,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
        [SetUp]
         public void Setup()
         {
-            clientController = new ClientController(null, PublicContext.context);
+            clientController = new ClientController(PublicContext.context);
         }
 
         [Test]
