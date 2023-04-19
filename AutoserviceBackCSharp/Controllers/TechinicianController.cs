@@ -7,13 +7,13 @@ namespace AutoserviceBackCSharp.Controllers
 
     [ApiController]
     [Route("[controller]")]
-    public class TechinicianController : ControllerBase
+    public class TechnicianController : ControllerBase
     {
-        private readonly ILogger<TechinicianController> _logger;
+        private readonly ILogger<TechnicianController> _logger;
         private readonly PracticedbContext _context;
 
 
-        public TechinicianController(ILogger<TechinicianController> logger, PracticedbContext context)
+        public TechnicianController(ILogger<TechnicianController> logger, PracticedbContext context)
         {
             _logger = logger;
             _context = context;
@@ -22,12 +22,12 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet]
         public IEnumerable<Technician> GetTechnicians()
         {
-            return _context.Technicians;
+            return _context.Technicians.ToArray();
         }
         [HttpGet("{id}")]
         public ActionResult<Technician> GetTechnician(int id)
         {
-            var technician = _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            var technician= _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
             if (technician == null)
             {
                 return NotFound(new { message = "Техник не найден" });
@@ -38,40 +38,53 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostTechnician(string name, string phone, string specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
-            if (name == null)
+            
+            
+            if(string.IsNullOrWhiteSpace(name))
             {
                 return BadRequest("Имя техника не может быть пустым");
             }
-
-            if (specialization == null)
+            
+            if(string.IsNullOrWhiteSpace(specialization))
             {
                 return BadRequest("Специализация техника не может быть пустым");
             }
 
-            if (!name.All(x => char.IsLetter(x)))
+
+            if (name != null && !name.All(x => char.IsLetter(x)))
             {
                 return BadRequest("Имя техника может содержать только буквы");
             }
 
-            if (!specialization.All(x => char.IsLetter(x)))
+            if (specialization != null && !specialization.All(x => char.IsLetter(x)))
             {
-                return BadRequest("специализация техника может содержать только буквы");
+                return BadRequest("Специализация техника может содержать только буквы");
             }
 
-            if (name.Length > 32 || name.Length < 3)
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
-            if (specialization.Length > 32 || specialization.Length < 3)
+            if (specialization != null && (specialization.Length > 32 || specialization.Length < 3))
             {
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
 
-            if(!PhoneValidator.Validate(phone)){
-                return BadRequest("Номер телефона должен быть корректным");
-            }
+            var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+                try
+                {
+                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception)
+                {
+                    return BadRequest("Номер телефона должен быть корректным");
+                }
 
-            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization = specialization };
+            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization= specialization };
             if (startWork.HasValue)
             {
                 newTechnician.StartWork = DateOnly.FromDateTime((DateTime)startWork);
@@ -97,10 +110,10 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (specialization != null && !specialization.All(x => char.IsLetter(x)))
             {
-                return BadRequest("специализация техника может содержать только буквы");
+                return BadRequest("Специализация техника может содержать только буквы");
             }
 
-            if (name != null && (name.Length > 32 || name.Length < 3))
+            if (name!=null&&(name.Length > 32 ||  name.Length < 3))
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
@@ -109,8 +122,21 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("Специализация техника не может быть такой длинны");
             }
 
-            if(!PhoneValidator.Validate(phone)){
-                return BadRequest("Номер телефона должен быть корректным");
+            if (phone != null)
+            {
+                var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+                try
+                {
+                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+                    {
+                        throw new Exception();
+                    }
+                }
+                catch (Exception)
+                {
+                    return BadRequest("Номер телефона должен быть корректным");
+                }
             }
 
             if (updTechnician != null)
@@ -126,11 +152,11 @@ namespace AutoserviceBackCSharp.Controllers
                 {
                     updTechnician.StartWorkInCompany = DateOnly.FromDateTime(startWorkInCompany.Value);
                 }
-
+                
                 _context.SaveChanges();
                 return Ok(new { updTechnician = updTechnician, message = "Техник успешно обновлен" });
             }
-            return NotFound(new { message = "Техник не найден" });
+            return NotFound(new { message = "Техник не найден" }); 
         }
 
         [HttpDelete("{id}")]
@@ -140,13 +166,13 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (technician != null)
             {
-                _context.Orders.Where(val => val.Technician == id).ToList().ForEach(val => _context.Remove(val));
+                technician.Orders.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(technician);
                 _context.SaveChanges();
                 return Ok(new { message = "Техник успешно ликвидирован" });
             }
 
-            return NotFound(new { message = "Техник не найден" }); ;
+            return  NotFound(new { message = "Техник не найден" }); 
         }
     }
 }

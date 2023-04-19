@@ -1,12 +1,13 @@
-using AutoserviceBackCSharp.Models;
+﻿using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace AutoserviceBackCSharp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [DisableCors]
+
     public class WarehouseController : ControllerBase
     {
         private readonly ILogger<CarController> _logger;
@@ -20,80 +21,76 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet]
         public IEnumerable<Warehouse> GetWarehouses()
         {
-            return _context.Warehouses;
+            return _context.Warehouses.ToArray();
         }
 
         [HttpGet("{id}")]
-        public Warehouse GetWarehouse(int id)
+        public ActionResult<Warehouse> GetWarehouse(int id)
         {
-            return _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id)!;
+            var warehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id)!;
+            if (warehouse == null)
+            {
+                return NotFound(new { message = "Склад не найден" });
+            }
+            return Ok(warehouse);
         }
 
         [HttpPost]
         public ActionResult<Warehouse> PostWarehouse(string adress, string name)
         {
-           // var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            //if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
-            //{
-            //    return BadRequest(
-            //        new { message = "Имя и адресс склада не могут быть пустыми" }
-            //        );
-            //}
-            //if (validator.IsValid(adress) == false)
-            //{
-            //    return BadRequest("Склад техника не может содержать такие символы");
-            //}
-            //if (!validator.IsValid(adress))
-            //{
-            //    return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
-            //}
+
+            if (name != null && (name.Length > 32 || name.Length < 3))
+            {
+                return BadRequest("Имя категории не может быть такой длинны");
+            }
+            if (adress != null && (adress.Length > 32 || adress.Length < 3))
+            {
+                return BadRequest("Адресс категории не может быть такой длинны");
+            }
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
-            return newWarehouse;
+            return Ok(new { warehouse = newWarehouse, message = "Склад успешно обновлен" }); ;
         }
 
         [HttpPatch("{id}")]
-        public ActionResult<Warehouse> UpdateWarehouse(int id, string? adress, string? name)
+        public ActionResult<Warehouse> UpdateWarehouse(int id, string adress, string name)
         {
-            //var validator = new SymbolValidator(new char[] { '%', '$', '@', '!', '%', '^', '`' });
-            //if ((name == null || name.Length == 0) || (adress == null || adress.Length == 0))
-            //{
-            //    return BadRequest("Имя и адресс склада не могут быть пустыми");
-            //}
-            //if (validator.IsValid(adress) == false)
-            //{
-            //    return BadRequest("Склад техника не может содержать такие символы");
-            //}
-            //if (!validator.IsValid(adress))
-            //{
-            //    return BadRequest("Адрес может содержать только буквы, цифры, пробелы и запятые");
-            //}
+
+            if (name != null && (name.Length > 32 || name.Length < 3))
+            {
+                return BadRequest("Имя категории не может быть такой длинны");
+            }
+            if (adress != null && (adress.Length > 32 || adress.Length < 3))
+            {
+                return BadRequest("Адресс категории не может быть такой длинны");
+            }
+
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
             if(updWarehouse != null)
             {
                 updWarehouse.Address = adress ?? updWarehouse.Address;
                 updWarehouse.Name = name ?? updWarehouse.Name;
                 _context.SaveChanges();
-                return Ok(new { updWarehouse = updWarehouse, message = "Склад успешно обновлен" }); ;
+                return Ok(new { warehouse = updWarehouse, message = "Склад успешно обновлен" }); ;
             }
-            return NotFound(new { message = "Склад не найден" });
+            return BadRequest("Склад не найден");
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteWarehouse(int id)
+        public ActionResult<Warehouse> DeleteWarehouse(int id)
         {
             var warehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
 
             if (warehouse != null)
             {
+                warehouse.DetailLists.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(warehouse);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Склад успешно удален" });
             }
 
-            return false;
+            return NotFound(new { message = "Склад не найден" });
         }
     }
 }
-

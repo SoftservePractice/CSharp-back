@@ -1,4 +1,4 @@
-using AutoserviceBackCSharp.Models;
+﻿using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoserviceBackCSharp.Controllers
@@ -25,7 +25,7 @@ namespace AutoserviceBackCSharp.Controllers
                     && (description == null || workList.Description == description)
                     && (price == null || workList.Price == price)
                     && (duration == null || workList.Duration == duration)
-            )!;
+            )!.ToArray();
         }
 
         [HttpGet("{id}")]
@@ -35,17 +35,41 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpPost]
-        public WorkList PostWorkList(string name, string description, float price, float duration)
+        public ActionResult<WorkList> PostWorkList(string name, string description, float price, float duration)
         {
-	        var workList = new WorkList() { Name = name, Description = description, Price = price, Duration = duration };
+            if (name.Length < 3 || name.Length > 32)
+                return BadRequest("Имя должно содержать от 3 до 32 букв");
+
+            if (description.Length < 3 || description.Length > 300)
+                return BadRequest("Описание от 3 до 300 символов");
+
+            if (price < 0)
+                return BadRequest("Цена не может быть меньше 0");
+
+            if (duration < 0)
+                return BadRequest("Длительность процесса не может быть меньше 0");
+
+            var workList = new WorkList() { Name = name, Description = description, Price = price, Duration = duration };
             _context.WorkLists.Add(workList);
             _context.SaveChanges();
             return workList;
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
+        public ActionResult<WorkList> UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
         {
+            if (name != null && (name.Length < 3 || name.Length > 32))
+                return BadRequest("Имя должно содержать от 3 до 32 букв");
+            
+            if (description != null && (description.Length < 3 || description.Length > 300))
+                return BadRequest("Описание от 3 до 300 символов");
+            
+            if (price != null && price < 0)
+                return BadRequest("Цена не может быть меньше 0");
+            
+            if (duration != null && duration < 0)
+                return BadRequest("Длительность процесса не может быть меньше 0");
+            
             var updWorkList = _context.WorkLists.SingleOrDefault(wl => wl.Id == id);
 	        if(updWorkList != null)
             {
@@ -54,24 +78,26 @@ namespace AutoserviceBackCSharp.Controllers
             	updWorkList.Price = price ?? updWorkList.Price;
             	updWorkList.Duration = duration ?? updWorkList.Duration;
                 _context.SaveChanges();
-            	return true;
+            	return updWorkList;
 	        }
-	        return false;
+            return NotFound();
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteWorkList(int id)
+        public ActionResult DeleteWorkList(int id)
         {
             var worklist = _context.WorkLists.SingleOrDefault(worklist => worklist.Id == id);
 
             if (worklist != null)
             {
+                worklist.Works.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(worklist);
                 _context.SaveChanges();
-                return true;
+
+                return Ok(new { message = "WorkList успешно ликвидирован" });
             }
 
-            return false;
+            return NotFound(new { message = "WorkList не найден" }); ;
         }
     }
 }

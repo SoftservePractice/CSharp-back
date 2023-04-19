@@ -16,6 +16,14 @@ namespace AutoserviceBackCSharp.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public ActionResult<IEnumerable<Car>> GetCars()
+        {
+            var cars = _context.Cars.ToArray();
+
+            return Ok(cars);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Car> GetCar(int id)
         {
@@ -25,14 +33,6 @@ namespace AutoserviceBackCSharp.Controllers
                 return NotFound(new { message = "Автомобиль не найден" });
             }
             return Ok(car);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<Car>> GetCars()
-        {
-            var cars = _context.Cars;
-
-            return Ok(cars);
         }
 
         [HttpPost]
@@ -49,6 +49,14 @@ namespace AutoserviceBackCSharp.Controllers
             if (carNumber.Length < 3 || carNumber.Length > 20)
             {
                 return BadRequest("Номер машины некорректный");
+            }
+            if (DateOnly.FromDateTime(year).Year < 1900 || DateOnly.FromDateTime(year).Year > DateTime.Now.Year)
+            {
+                return BadRequest("Год изготовления машины некорректный");
+            }
+            if (clientId != 0 && (_context.Clients.SingleOrDefault(client => client.Id == clientId) == null))
+            {
+                return NotFound(new { message = "Пользователя с таким ID нет" });
             }
 
             var car = new Car()
@@ -69,6 +77,28 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPatch("{id}")]
         public ActionResult<Car> UpdateCar(int id, string? mark, DateTime? year, string? vin, string? carNumber, int? clientId)
         {
+
+            if (mark!=null && (mark.Length < 3 || mark.Length > 30))
+            {
+                return BadRequest("Марка машины некорректная");
+            }
+            if (vin != null && (vin.Length < 3 || vin.Length > 30))
+            {
+                return BadRequest("Vin код машины некорректный");
+            }
+            if (carNumber != null && (carNumber.Length < 3 || carNumber.Length > 20))
+            {
+                return BadRequest("Номер машины некорректный");
+            }
+            if (year != null && (DateOnly.FromDateTime(year.Value).Year < 1900 || DateOnly.FromDateTime(year.Value).Year > DateTime.Now.Year))
+            {
+                return BadRequest("Год изготовления машины некорректный");
+            }
+            if (clientId != null && (_context.Clients.Where(client => client.Id == clientId).SingleOrDefault() == null))
+            {
+                return NotFound(new { message = "Пользователя с таким ID нет" });
+            }
+
             var car = _context.Cars.SingleOrDefault(car => car.Id == id);
             if (car != null)
             {
@@ -76,6 +106,7 @@ namespace AutoserviceBackCSharp.Controllers
                 car.Vin = vin ?? car.Vin;
                 car.CarNumber = carNumber ?? car.CarNumber;
                 car.Client = clientId ?? car.Client;
+                
                 if (year.HasValue)
                 {
                     car.Year = DateOnly.FromDateTime(year.Value);

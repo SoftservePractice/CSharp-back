@@ -18,63 +18,109 @@ namespace AutoserviceBackCSharp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Detail> GetDetails(int? catId)
+        public ActionResult<IEnumerable<Detail>> GetDetails(int? catId)
         {
-            return _context.Details.Where(
+            var details = _context.Details.Where(
                 detail =>
                     (catId == null || detail.Category == catId)
-            )!;
+            )!.ToArray();
+
+            return Ok(details);
         }
         [HttpGet("{id}")]
-        public Detail GetDetail(int id)
+        public ActionResult<Detail> GetDetail(int id)
         {
-            return _context.Details.SingleOrDefault(order => order.Id == id)!;
+            var detail = _context.Details.SingleOrDefault(detail => detail.Id == id)!;
+            if (detail == null)
+            {
+                return NotFound(new { message = "Detail не найден" });
+            }
+            return Ok(detail);
         }
 
         [HttpPost]
-        public Detail PostDetail(string model, string vendorCode, string? description, string compatibleVehicles)
+        public ActionResult PostDetail(string model, string vendorCode, string description, string compatibleVehicles, int catId)
         {
-            var newDetail = new Detail() { 
+            if (model.Length < 3 || model.Length > 32)
+            {
+                return BadRequest("Модель некорректная");
+            }
+            if (vendorCode.Length < 3 || vendorCode.Length > 32)
+            {
+                return BadRequest("Vendor код некорректный");
+            }
+            if (description.Length < 3 || description.Length > 300)
+            {
+                return BadRequest("Описание некорректное");
+            }
+            if (compatibleVehicles.Length < 3 || compatibleVehicles.Length > 300)
+            {
+                return BadRequest("Совместимые автомобили некорректны");
+            }
+
+            var detail = new Detail() { 
                 Model = model, 
                 VendorCode = vendorCode, 
-                Description = description ?? "", 
-                CompatibleVehicles = compatibleVehicles
+                Description = description, 
+                CompatibleVehicles = compatibleVehicles,
+                Category = catId
             };
-            _context.Details.Add(newDetail);
+
+            _context.Details.Add(detail);
             _context.SaveChanges();
-            return newDetail;
+
+            return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "Detail успешно создан" });
         }
 
         [HttpPatch("{id}")]
-        public bool UpdateDetail(int id, string? model, string? vendorCode, string? description, string? compatibleVehicles)
+        public ActionResult<Detail> UpdateDetail(int id, string? model, string? vendorCode, string? description, string? compatibleVehicles, int? catId)
         {
-            var updDetail = _context.Details.SingleOrDefault(detail => detail.Id == id);
-            if(updDetail != null)
+            if (model != null && (model.Length < 3 || model.Length > 32))
             {
-                updDetail.Model = model ?? updDetail.Model;
-                updDetail.VendorCode = vendorCode ?? updDetail.VendorCode;
-                updDetail.Description = description ?? updDetail.Description;
-                updDetail.CompatibleVehicles = compatibleVehicles ?? updDetail.CompatibleVehicles;
-                _context.SaveChanges();
-                return true;
+                return BadRequest("Модель некорректная");
             }
-            return false;
+            if (vendorCode != null && (vendorCode.Length < 3 || vendorCode.Length > 32))
+            {
+                return BadRequest("Vendor код некорректный");
+            }
+            if (description != null && (description.Length < 3 || description.Length > 300))
+            {
+                return BadRequest("Описание некорректное");
+            }
+            if (compatibleVehicles != null && (compatibleVehicles.Length < 3 || compatibleVehicles.Length > 300))
+            {
+                return BadRequest("Совместимые автомобили некорректны");
+            }
+
+            var detail = _context.Details.SingleOrDefault(detail => detail.Id == id);
+            if(detail != null)
+            {
+                detail.Model = model ?? detail.Model;
+                detail.VendorCode = vendorCode ?? detail.VendorCode;
+                detail.Description = description ?? detail.Description;
+                detail.CompatibleVehicles = compatibleVehicles ?? detail.CompatibleVehicles;
+                detail.Category = catId ?? detail.Category;
+                _context.SaveChanges();
+                return Ok(new { message = "Detail успешно обновлены" });
+            }
+            return NotFound(new { message = "Detail не найдены" });
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteDetail(int id)
+        public ActionResult DeleteDetail(int id)
         {
             var detail = _context.Details.SingleOrDefault(detail => detail.Id == id);
 
             if (detail != null)
             {
-                _context.DetailLists.Where(val => val.Detail == id).ToList().ForEach(val => _context.Remove(val));
+                detail.Works.ToList().ForEach(x => _context.Remove(x));
+                detail.DetailLists.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(detail);
                 _context.SaveChanges();
-                return true;
+                return Ok(new { message = "Detail успешно удален" });
             }
 
-            return false;
+            return NotFound(new { message = "Detail не найден" });
         }
     }
 }

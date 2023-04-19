@@ -1,17 +1,21 @@
 using AutoserviceBackCSharp.Controllers;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMvc().AddJsonOptions(o => {
-    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+builder.Services.AddControllers();
+builder.Services.AddMvc(options =>
+{
+    options.SuppressAsyncSuffixInActionNames = false;
 });
 builder.Services.AddDbContext<AutoserviceBackCSharp.Models.PracticedbContext>();
 builder.Services.AddSingleton(_ => new AutoserviceBackCSharp.Singletone.DbConnection(builder.Configuration.GetConnectionString("Default")));

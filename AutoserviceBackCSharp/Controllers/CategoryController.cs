@@ -1,76 +1,89 @@
-﻿//using AutoserviceBackCSharp.Models;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AutoserviceBackCSharp.Models;
+using AutoserviceBackCSharp.Validation;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace AutoserviceBackCSharp.Controllers
-//{
-//    [ApiController]
-//    [Route("[controller]")]
-//    public class CategoryController : ControllerBase
-//    {
-//        private readonly ILogger<CategoryController> _logger;
-//        private readonly PracticedbContext _context;
 
-//        public CategoryController(ILogger<CategoryController> logger, PracticedbContext context)
-//        {
-//            _logger = logger;
-//            _context = context;
-//        }
+namespace AutoserviceBackCSharp.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class CategoryController : ControllerBase
+    {
+        private readonly ILogger<CategoryController> _logger;
+        private readonly PracticedbContext _context;
 
-//        [HttpGet]
-//        public IEnumerable<Category> GetCategory(string? name, int parentCategory)
-//        {
-//            return _context.Categories.Where(
-//                category =>
-//                (name == null || category.Name == name)
-//                && (parentCategory == null || category.ParentCategory == parentCategory)
+        public CategoryController(ILogger<CategoryController> logger, PracticedbContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
 
-//            )!;
+        [HttpGet]
+        public ActionResult<IEnumerable<Category>> GetCategory(string? name, int? parentCategory)
+        {
+            return _context.Categories.ToArray();
+        }
 
-//        }
+        [HttpGet("~/[controller]/{id}")]
+        public ActionResult<Category> GetCategory(int id)
+        {
+            var category = _context.Categories.SingleOrDefault(category => category.Id == id)!;
+            if (category == null)
+            {
+                return BadRequest("Категория не найдена");
+            }
+            return Ok(category);
+        }
 
-//        [HttpGet("~/[controller]/{id}")]
-//        public Category GetCategory(int id)
-//        {
-//            return _context.Categories.SingleOrDefault(category => category.Id == id)!;
-//        }
+        [HttpPost]
+        public ActionResult<Category> PostCategory(string name, int? parentCategory)
+        {
+            var category = new Category() { Name = name, ParentCategory = parentCategory };
 
-//        [HttpPost]
-//        public Category PostCategory(string? name, int parentCategory)
-//        {
-//            var category = new Category() { Name = name, ParentCategory = parentCategory };
-//            _context.Categories.Add(category);
-//            _context.SaveChanges();
-//            return category;
-//        }
+            if (name != null && (name.Length > 32 || name.Length < 3))
+            {
+                return BadRequest("Имя категории не может быть такой длинны");
+            }
+            _context.Categories.Add(category);
+            _context.SaveChanges();
+            return category;
+        }
 
-//        [HttpPatch("~/[controller]/{id}")]
-//        public bool UpdateCategory(int id, string? name, int? parentCategory)
-//        {
-//            var updCategory = _context.Categories.SingleOrDefault(updCategory => updCategory.Id == id);
+        [HttpPatch("~/[controller]/{id}")]
+        public ActionResult<Category> UpdateCategory(int id, string? name, int? parentCategory)
+        {
+            var updCategory = _context.Categories.SingleOrDefault(updCategory => updCategory.Id == id);
 
-//            if (updCategory != null)
-//            {
-//                updCategory.Name = name ?? updCategory.Name;
-//                updCategory.ParentCategory = parentCategory ?? updCategory.ParentCategory;
-//                _context.SaveChanges();
-//                return true;
-//            }
-//            return false;
+            if (name != null && (name.Length > 32 || name.Length < 3))
+            {
+                return BadRequest("Имя категории не может быть такой длинны");
+            }
 
-//        }
-//        [HttpDelete("~/[controller]/{id}")]
-//        public bool DeleteCategory(int id)
-//        {
-//            var category = _context.Categories.SingleOrDefault(category => category.Id == id);
+            if (updCategory != null)
+            {
+                updCategory.Name = name ?? updCategory.Name;
+                updCategory.ParentCategory = parentCategory ?? updCategory.ParentCategory;
+                _context.SaveChanges();
+                return Ok(new { updCategory = updCategory, message = "Категория успешно обновлена" });
+            }
+            return BadRequest("Категория не найдена");
 
-//            if (category != null)
-//            {
-//                _context.Remove(category);
-//                _context.SaveChanges();
-//                return true;
-//            }
-//            return false;
-//        }
 
-//    }
-//}
+        }
+        [HttpDelete("~/[controller]/{id}")]
+        public ActionResult<Category> DeleteCategory(int id)
+        {
+            var category = _context.Categories.SingleOrDefault(category => category.Id == id);
+
+            if (category != null)
+            {
+                category.Details.ToList().ForEach(x => _context.Remove(x));
+                category.InverseParentCategoryNavigation.ToList().ForEach(x => _context.Remove(x));
+                _context.Remove(category);
+                _context.SaveChanges();
+                return Ok(new { message = "Категория успешна удалена" });
+            }
+            return NotFound(new { message = "Категория не найдена" });
+        }
+    }
+}
