@@ -6,7 +6,6 @@ namespace AutoserviceBackCSharp.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [DisableCors]
 
     public class WarehouseController : ControllerBase
     {
