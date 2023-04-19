@@ -85,7 +85,5 @@ namespace AutoserviceBackCSharp.Controllers
             }
             return NotFound(new { message = "Категория не найдена" });
         }
-
-
     }
 }
