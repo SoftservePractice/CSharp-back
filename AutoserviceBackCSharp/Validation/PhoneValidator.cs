@@ -1,15 +1,17 @@
+using System.Net.Mail;
+
 namespace AutoserviceBackCSharp.Validation
 {
-    public static class PhoneValidator
+    public class Validator
     {
         private static readonly PhoneNumbers.PhoneNumberUtil phoneNumberUtil;
 
-        static PhoneValidator()
+        static Validator()
         {
             phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
         }
 
-        public static bool Validate(string? phone)
+        public bool ValidatePhone(string? phone)
         {
             if (phone == null)
                 return true;
@@ -23,6 +25,23 @@ namespace AutoserviceBackCSharp.Validation
             {
                 return false;
             }
+        }
+        
+        public bool ValidateEmail(string? email)
+        {
+            if (email == null)
+                return true;
+
+            try
+            {
+                var emailAddress = new MailAddress(email);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

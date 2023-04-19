@@ -45,9 +45,15 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            if (!PhoneValidator.Validate(phone))
+            Validator validator = new Validator();
+            if (!validator.ValidatePhone(phone))
             {
                 return BadRequest("Номер телефона должен быть корректным");
+            }
+
+            if (!validator.ValidateEmail(email))
+            {
+                return BadRequest("Почта должна быть корректной");
             }
 
             var client = new Client()
@@ -70,8 +76,14 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
 
-            if(!PhoneValidator.Validate(phone)){
+            Validator validator = new Validator();
+            if(!validator.ValidatePhone(phone)){
                 return BadRequest("Номер телефона должен быть корректным");
+            }
+
+            if (!validator.ValidateEmail(email))
+            {
+                return BadRequest("Почта должна быть корректной");
             }
 
             if (client != null)
