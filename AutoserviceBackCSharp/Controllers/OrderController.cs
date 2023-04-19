@@ -30,7 +30,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("{id}")]
         public ActionResult<Order> GetOrder(int id)
         {
-            var order =  _context.Orders.SingleOrDefault(order => order.Id == id);
+            var order = _context.Orders.SingleOrDefault(order => order.Id == id);
             if (order == null)
             {
                 return NotFound(new { message = "Заказ не найден" });
@@ -41,84 +41,81 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult<Order> PostOrder(int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
-            var client =_context.Clients.FirstOrDefault(client => client.Id == clientId) ?? null;
-            if(client == null)
+            var client = _context.Clients.FirstOrDefault(client => client.Id == clientId) ?? null;
+            if (client == null)
             {
                 return BadRequest(new { message = "Пользователь с таким id не найден" });
             }
-            else
+            if (finalPrice != null && finalPrice > 10000000)
             {
-                if(finalPrice != null && finalPrice > 10000000){
-                    return BadRequest(new { message = "Некорректное значение цены" });
-                }
-                if(carMieleage != null && carMieleage > 1000000000000){
-                    return BadRequest(new { message = "Некорректное значение километража машины" });
-                }
-
-                var newOrder = new Order() { 
-                    Client = clientId, 
-                    Technician = technician ?? null,
-                    FinalPrice = finalPrice ?? null, 
-                    Car = car ?? null,
-                    CarMileage = carMieleage ?? null
-                };
-                if(start.HasValue)
-                {
-                    newOrder.Start = DateOnly.FromDateTime(start.Value);
-                }
-                if(end.HasValue)
-                {
-                    newOrder.End = DateOnly.FromDateTime(end.Value);
-                }
-                if(appointmentTime.HasValue)
-                {
-                    newOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
-                }
-                _context.Orders.Add(newOrder);
-                _context.SaveChanges();
-                return Ok(newOrder);
+                return BadRequest(new { message = "Некорректное значение цены" });
             }
+            if (carMieleage != null && carMieleage > 1000000000000)
+            {
+                return BadRequest(new { message = "Некорректное значение километража машины" });
+            }
+
+            var newOrder = new Order()
+            {
+                Client = clientId,
+                Technician = technician ?? null,
+                FinalPrice = finalPrice ?? null,
+                Car = car ?? null,
+                CarMileage = carMieleage ?? null
+            };
+            if (start.HasValue)
+            {
+                newOrder.Start = DateOnly.FromDateTime(start.Value);
+            }
+            if (end.HasValue)
+            {
+                newOrder.End = DateOnly.FromDateTime(end.Value);
+            }
+            if (appointmentTime.HasValue)
+            {
+                newOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+            }
+            _context.Orders.Add(newOrder);
+            _context.SaveChanges();
+            return Ok(newOrder);
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Order> UpdateOrder(int id, int? clientId, int? technician, DateTime? start, DateTime? end, int? finalPrice, int? car, int? carMieleage, DateTime? appointmentTime)
         {
-            var client =_context.Clients.FirstOrDefault(client => client.Id == clientId) ?? null;
-            if(client == null)
+            var client = _context.Clients.FirstOrDefault(client => client.Id == clientId) ?? null;
+            if (client == null)
             {
                 return BadRequest(new { message = "Пользователь с таким id не найден" });
             }
-            else
+            var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
+            if (updOrder != null)
             {
-                var updOrder = _context.Orders.SingleOrDefault(order => order.Id == id);
-                if(updOrder != null)
+                updOrder.Client = clientId ?? updOrder.Client;
+                updOrder.Technician = technician ?? updOrder.Technician;
+                updOrder.FinalPrice = finalPrice ?? updOrder.FinalPrice;
+                updOrder.Car = car ?? updOrder.Car;
+                updOrder.CarMileage = carMieleage ?? updOrder.CarMileage;
+                if (start.HasValue)
                 {
-                    updOrder.Client = clientId ?? updOrder.Client;
-                    updOrder.Technician = technician ?? updOrder.Technician;
-                    updOrder.FinalPrice = finalPrice ?? updOrder.FinalPrice;
-                    updOrder.Car = car ?? updOrder.Car;
-                    updOrder.CarMileage = carMieleage ?? updOrder.CarMileage;
-                    if (start.HasValue)
-                    {
-                        updOrder.Start = DateOnly.FromDateTime(start.Value);
-                    }
-                    if (end.HasValue)
-                    {
-                        updOrder.End = DateOnly.FromDateTime(end.Value);
-                    }
-                    if(appointmentTime.HasValue)
-                    {
-                        updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
-                    }
-                    else
-                    {
-                        updOrder.AppointmentTime = DateOnly.MinValue;
-                    }
-                    _context.SaveChanges();
-                    return Ok(new { order = updOrder, message = "Заказ успешно обновлен" });
+                    updOrder.Start = DateOnly.FromDateTime(start.Value);
                 }
-                return NotFound(new { message = "Заказ не найден" });
+                if (end.HasValue)
+                {
+                    updOrder.End = DateOnly.FromDateTime(end.Value);
+                }
+                if (appointmentTime.HasValue)
+                {
+                    updOrder.AppointmentTime = DateOnly.FromDateTime(appointmentTime.Value);
+                }
+                else
+                {
+                    updOrder.AppointmentTime = DateOnly.MinValue;
+                }
+                _context.SaveChanges();
+                return Ok(new { order = updOrder, message = "Заказ успешно обновлен" });
             }
+            return NotFound(new { message = "Заказ не найден" });
         }
 
         [HttpDelete("{id}")]
