@@ -7,12 +7,10 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class WorkListController : ControllerBase
     {
-        private readonly ILogger<WorkListController> _logger;
         private readonly PracticedbContext _context;
 
-        public WorkListController(ILogger<WorkListController> logger, PracticedbContext context)
+        public WorkListController(PracticedbContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
@@ -21,7 +19,7 @@ namespace AutoserviceBackCSharp.Controllers
         {
             return _context.WorkLists.Where(
                 workList =>
-		            (name == null || workList.Name == name)
+                    (name == null || workList.Name == name)
                     && (description == null || workList.Description == description)
                     && (price == null || workList.Price == price)
                     && (duration == null || workList.Duration == duration)
@@ -38,16 +36,24 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<WorkList> PostWorkList(string name, string description, float price, float duration)
         {
             if (name.Length < 3 || name.Length > 32)
+            {
                 return BadRequest("Имя должно содержать от 3 до 32 букв");
+            }
 
             if (description.Length < 3 || description.Length > 300)
+            {
                 return BadRequest("Описание от 3 до 300 символов");
+            }
 
             if (price < 0)
+            {
                 return BadRequest("Цена не может быть меньше 0");
+            }
 
             if (duration < 0)
+            {
                 return BadRequest("Длительность процесса не может быть меньше 0");
+            }
 
             var workList = new WorkList() { Name = name, Description = description, Price = price, Duration = duration };
             _context.WorkLists.Add(workList);
@@ -59,27 +65,37 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<WorkList> UpdateWorkList(int id, string? name, string? description, float? price, float? duration)
         {
             if (name != null && (name.Length < 3 || name.Length > 32))
-                return BadRequest("Имя должно содержать от 3 до 32 букв");
-            
-            if (description != null && (description.Length < 3 || description.Length > 300))
-                return BadRequest("Описание от 3 до 300 символов");
-            
-            if (price != null && price < 0)
-                return BadRequest("Цена не может быть меньше 0");
-            
-            if (duration != null && duration < 0)
-                return BadRequest("Длительность процесса не может быть меньше 0");
-            
-            var updWorkList = _context.WorkLists.SingleOrDefault(wl => wl.Id == id);
-	        if(updWorkList != null)
             {
-            	updWorkList.Name = name ?? updWorkList.Name;
-            	updWorkList.Description = description ?? updWorkList.Description;
-            	updWorkList.Price = price ?? updWorkList.Price;
-            	updWorkList.Duration = duration ?? updWorkList.Duration;
+                return BadRequest("Имя должно содержать от 3 до 32 букв");
+            }
+
+            if (description != null && (description.Length < 3 || description.Length > 300))
+            {
+                return BadRequest("Описание от 3 до 300 символов");
+            }
+
+            if (price != null && price < 0)
+            {
+                return BadRequest("Цена не может быть меньше 0");
+            }
+
+            if (duration != null && duration < 0)
+            {
+                return BadRequest("Длительность процесса не может быть меньше 0");
+            }
+
+            var updWorkList = _context.WorkLists.SingleOrDefault(wl => wl.Id == id);
+
+            if (updWorkList != null)
+            {
+                updWorkList.Name = name ?? updWorkList.Name;
+                updWorkList.Description = description ?? updWorkList.Description;
+                updWorkList.Price = price ?? updWorkList.Price;
+                updWorkList.Duration = duration ?? updWorkList.Duration;
                 _context.SaveChanges();
-            	return updWorkList;
-	        }
+                return updWorkList;
+            }
+
             return NotFound();
         }
 
@@ -93,7 +109,6 @@ namespace AutoserviceBackCSharp.Controllers
                 worklist.Works.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(worklist);
                 _context.SaveChanges();
-
                 return Ok(new { message = "WorkList успешно ликвидирован" });
             }
 

@@ -25,6 +25,7 @@ public partial class Technician
 
     [Range(0, float.MaxValue, ErrorMessage = "Value must be non-negative")]
     public float Raiting { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

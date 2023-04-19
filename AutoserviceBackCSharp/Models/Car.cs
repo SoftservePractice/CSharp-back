@@ -15,8 +15,9 @@ public partial class Car
     public string CarNumber { get; set; } = null!;
 
     public int Client { get; set; }
-    public virtual Client ClientNavigation { get; set; } = null!;
-    [JsonIgnore]
 
+    public virtual Client ClientNavigation { get; set; } = null!;
+
+    [JsonIgnore]
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

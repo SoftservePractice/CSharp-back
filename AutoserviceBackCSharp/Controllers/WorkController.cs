@@ -8,12 +8,10 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class WorkController : ControllerBase
     {
-        private readonly ILogger<WorkController> _logger;
         private readonly PracticedbContext _context;
 
-        public WorkController(ILogger<WorkController> logger, PracticedbContext context)
+        public WorkController(PracticedbContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
@@ -32,10 +30,12 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Work> GetWork(int id)
         {
             var work = _context.Works.SingleOrDefault(work => work.Id == id)!;
+
             if (work == null)
             {
                 return NotFound(new { message = "Work не найден" });
             }
+
             return Ok(work);
         }
 
@@ -102,7 +102,9 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("WorkPrice не может быть меньше 0");
             }
+
             var updWork = _context.Works.SingleOrDefault(work => work.Id == id);
+
             if(updWork != null)
             {
                 updWork.Detail = detail ?? updWork.Detail;
@@ -113,6 +115,7 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return Ok(new { updWork = updWork, message = "Техник успешно обновлен" }); 
             }
+
             return NotFound(new { message = "Техник не найден" }); 
         }
 

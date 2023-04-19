@@ -1,5 +1,4 @@
 ﻿using AutoserviceBackCSharp.Models;
-using AutoserviceBackCSharp.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -9,17 +8,15 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly ILogger<CategoryController> _logger;
         private readonly PracticedbContext _context;
 
-        public CategoryController(ILogger<CategoryController> logger, PracticedbContext context)
+        public CategoryController(PracticedbContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Category>> GetCategory(string? name, int? parentCategory)
+        public ActionResult<IEnumerable<Category>> GetCategory()
         {
             return _context.Categories.ToArray();
         }
@@ -28,10 +25,12 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Category> GetCategory(int id)
         {
             var category = _context.Categories.SingleOrDefault(category => category.Id == id)!;
+
             if (category == null)
             {
                 return BadRequest("Категория не найдена");
             }
+
             return Ok(category);
         }
 
@@ -44,6 +43,7 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Имя категории не может быть такой длинны");
             }
+
             _context.Categories.Add(category);
             _context.SaveChanges();
             return category;
@@ -66,10 +66,10 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return Ok(new { updCategory = updCategory, message = "Категория успешно обновлена" });
             }
+
             return BadRequest("Категория не найдена");
-
-
         }
+
         [HttpDelete("~/[controller]/{id}")]
         public ActionResult<Category> DeleteCategory(int id)
         {
@@ -83,6 +83,7 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return Ok(new { message = "Категория успешна удалена" });
             }
+
             return NotFound(new { message = "Категория не найдена" });
         }
     }

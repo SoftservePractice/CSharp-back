@@ -8,12 +8,10 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class DetailController : ControllerBase
     {
-        private readonly ILogger<OrderController> _logger;
         private readonly PracticedbContext _context;
 
-        public DetailController(ILogger<OrderController> logger, PracticedbContext context)
+        public DetailController(PracticedbContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
@@ -27,14 +25,17 @@ namespace AutoserviceBackCSharp.Controllers
 
             return Ok(details);
         }
+
         [HttpGet("{id}")]
         public ActionResult<Detail> GetDetail(int id)
         {
             var detail = _context.Details.SingleOrDefault(detail => detail.Id == id)!;
+
             if (detail == null)
             {
                 return NotFound(new { message = "Detail не найден" });
             }
+
             return Ok(detail);
         }
 
@@ -45,14 +46,17 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Модель некорректная");
             }
+
             if (vendorCode.Length < 3 || vendorCode.Length > 32)
             {
                 return BadRequest("Vendor код некорректный");
             }
+
             if (description.Length < 3 || description.Length > 300)
             {
                 return BadRequest("Описание некорректное");
             }
+
             if (compatibleVehicles.Length < 3 || compatibleVehicles.Length > 300)
             {
                 return BadRequest("Совместимые автомобили некорректны");
@@ -68,7 +72,6 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.Details.Add(detail);
             _context.SaveChanges();
-
             return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "Detail успешно создан" });
         }
 
@@ -79,20 +82,24 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 return BadRequest("Модель некорректная");
             }
+
             if (vendorCode != null && (vendorCode.Length < 3 || vendorCode.Length > 32))
             {
                 return BadRequest("Vendor код некорректный");
             }
+
             if (description != null && (description.Length < 3 || description.Length > 300))
             {
                 return BadRequest("Описание некорректное");
             }
+
             if (compatibleVehicles != null && (compatibleVehicles.Length < 3 || compatibleVehicles.Length > 300))
             {
                 return BadRequest("Совместимые автомобили некорректны");
             }
 
             var detail = _context.Details.SingleOrDefault(detail => detail.Id == id);
+
             if(detail != null)
             {
                 detail.Model = model ?? detail.Model;
@@ -103,6 +110,7 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return Ok(new { message = "Detail успешно обновлены" });
             }
+
             return NotFound(new { message = "Detail не найдены" });
         }
 

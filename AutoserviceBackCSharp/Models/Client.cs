@@ -17,10 +17,13 @@ public partial class Client
     public string? Email { get; set; }
 
     public bool IsConfirm { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<Car> Cars { get; } = new List<Car>();
+
     [JsonIgnore]
     public virtual ICollection<Feedback> Feedbacks { get; } = new List<Feedback>();
+
     [JsonIgnore]
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

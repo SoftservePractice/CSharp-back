@@ -8,12 +8,10 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class ClientController : ControllerBase
     {
-        private readonly ILogger<ClientController> _logger;
         private readonly PracticedbContext _context;
 
-        public ClientController(ILogger<ClientController> logger, PracticedbContext context)
+        public ClientController(PracticedbContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
@@ -35,10 +33,12 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Client> GetClient(int id)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
+
             if (client == null)
             {
                 return NotFound(new { message = "Пользователь не найден" });
             }
+
             return Ok(client);
         }
 
@@ -46,6 +46,7 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
             Validator validator = new Validator();
+
             if (!validator.ValidatePhone(phone))
             {
                 return BadRequest("Номер телефона должен быть корректным");
@@ -67,7 +68,6 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.Clients.Add(client);
             _context.SaveChanges();
-
             return CreatedAtAction(nameof(PostClient), new { client = client, message = "Пользователь успешно создан" });
         }
 
@@ -75,8 +75,8 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Client> UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
-
             Validator validator = new Validator();
+
             if(!validator.ValidatePhone(phone)){
                 return BadRequest("Номер телефона должен быть корректным");
             }

@@ -13,6 +13,7 @@ public partial class WorkList
     public float? Price { get; set; }
 
     public float? Duration { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<Work> Works { get; } = new List<Work>();
 }
