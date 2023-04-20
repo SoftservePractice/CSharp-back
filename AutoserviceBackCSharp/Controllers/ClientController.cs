@@ -45,14 +45,14 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            Validator validator = new Validator();
+            UserFieldsValidator uservalidator = new UserFieldsValidator();
 
-            if (!validator.ValidatePhone(phone))
+            if (!uservalidator.ValidatePhone(phone))
             {
                 return BadRequest("Invalid phone number field");
             }
 
-            if (!validator.ValidateEmail(email))
+            if (!uservalidator.ValidateEmail(email))
             {
                 return BadRequest("Invalid email field");
             }
@@ -75,13 +75,13 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Client> UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
-            Validator validator = new Validator();
+            UserFieldsValidator uservalidator = new UserFieldsValidator();
 
-            if(!validator.ValidatePhone(phone)){
+            if(!uservalidator.ValidatePhone(phone)){
                 return BadRequest("Invalid phone number field");
             }
 
-            if (!validator.ValidateEmail(email))
+            if (!uservalidator.ValidateEmail(email))
             {
                 return BadRequest("Invalid email field");
             }
