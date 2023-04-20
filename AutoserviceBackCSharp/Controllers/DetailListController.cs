@@ -33,17 +33,17 @@ namespace AutoserviceBackCSharp.Controllers
         {
             if (warehouseId < 0)
             {
-                return BadRequest("ID склада не может быть меньше 0");
+                return BadRequest("Warehouse ID can't be less than 0");
             }
 
             if (detailId < 0)
             {
-                return BadRequest("ID детали не может быть меньше 0");
+                return BadRequest("Detail ID can't be less than 0");
             }
 
             if (count != null && count < 0)
             {
-                return BadRequest("Кол-во деталей не может быть меньше 0");
+                return BadRequest("Detail count can't be less than 0");
             }
 
             var newDetailList = new DetailList { Warehouse = warehouseId, Detail = detailId };
@@ -63,17 +63,17 @@ namespace AutoserviceBackCSharp.Controllers
         {
             if (warehouseId != null && warehouseId < 0)
             {
-                return BadRequest("ID склада не может быть меньше 0");
+                return BadRequest("Warehouse ID can't be less than 0");
             }
 
             if (detailId != null && detailId < 0)
             {
-                return BadRequest("ID детали не может быть меньше 0");
+                return BadRequest("Detail ID can't be less than 0");
             }
 
             if (count != null && count < 0)
             {
-                return BadRequest("Кол-во деталей не может быть меньше 0");
+                return BadRequest("Detail count can't be less than 0");
             }
 
             var updDetailList = _context.DetailLists.SingleOrDefault(detailList => detailList.Id == id);
@@ -99,10 +99,10 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(detailList);
                 _context.SaveChanges();
-                return Ok(new { message = "DetailList успешно ликвидирован" });
+                return Ok(new { message = "DetailList successfully deleted" });
             }
 
-            return NotFound(new { message = "DetailList не найден" }); ;
+            return NotFound(new { message = "DetailList not found" });
         }
     }
 }

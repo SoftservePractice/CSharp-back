@@ -29,7 +29,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (car == null)
             {
-                return NotFound(new { message = "Автомобиль не найден" });
+                return NotFound(new { message = "Car not found" });
             }
 
             return Ok(car);
@@ -40,27 +40,27 @@ namespace AutoserviceBackCSharp.Controllers
         {
             if(mark.Length < 3 || mark.Length > 30)
             {
-                return BadRequest("Марка машины некорректная");
+                return BadRequest("Car mark incorrect");
             }
 
             if (vin.Length < 3 || vin.Length > 30)
             {
-                return BadRequest("Vin код машины некорректный");
+                return BadRequest("Car Vin code incorrect");
             }
 
             if (carNumber.Length < 3 || carNumber.Length > 20)
             {
-                return BadRequest("Номер машины некорректный");
+                return BadRequest("Car number incorrect");
             }
 
             if (DateOnly.FromDateTime(year).Year < 1900 || DateOnly.FromDateTime(year).Year > DateTime.Now.Year)
             {
-                return BadRequest("Год изготовления машины некорректный");
+                return BadRequest("Car manufacturing year incorrect");
             }
 
             if (clientId != 0 && (_context.Clients.SingleOrDefault(client => client.Id == clientId) == null))
             {
-                return NotFound(new { message = "Пользователя с таким ID нет" });
+                return NotFound(new { message = "There is no user with this ID" });
             }
 
             var car = new Car()
@@ -74,7 +74,7 @@ namespace AutoserviceBackCSharp.Controllers
             _context.Cars.Add(car);
             _context.SaveChanges();
 
-            return CreatedAtAction(nameof(PostCar), new { car = car, message = "Автомобиль успешно создан" });
+            return CreatedAtAction(nameof(PostCar), new { car = car, message = "Car created successfully" });
         }
 
         [HttpPatch("{id}")]
@@ -82,27 +82,27 @@ namespace AutoserviceBackCSharp.Controllers
         {
             if (mark!=null && (mark.Length < 3 || mark.Length > 30))
             {
-                return BadRequest("Марка машины некорректная");
+                return BadRequest("Car mark incorrect");
             }
 
             if (vin != null && (vin.Length < 3 || vin.Length > 30))
             {
-                return BadRequest("Vin код машины некорректный");
+                return BadRequest("Car Vin code incorrect");
             }
 
             if (carNumber != null && (carNumber.Length < 3 || carNumber.Length > 20))
             {
-                return BadRequest("Номер машины некорректный");
+                return BadRequest("Car number incorrect");
             }
 
             if (year != null && (DateOnly.FromDateTime(year.Value).Year < 1900 || DateOnly.FromDateTime(year.Value).Year > DateTime.Now.Year))
             {
-                return BadRequest("Год изготовления машины некорректный");
+                return BadRequest("Car manufacturing year incorrect");
             }
 
             if (clientId != null && (_context.Clients.Where(client => client.Id == clientId).SingleOrDefault() == null))
             {
-                return NotFound(new { message = "Пользователя с таким ID нет" });
+                return NotFound(new { message = "There is no user with this ID" });
             }
 
             var car = _context.Cars.SingleOrDefault(car => car.Id == id);
@@ -120,10 +120,10 @@ namespace AutoserviceBackCSharp.Controllers
                 }
 
                 _context.SaveChanges();
-                return Ok(new { car = car, message = "Автомобиль успешно обновлен" });
+                return Ok(new { car = car, message = "Car updated successfully" });
             }
 
-            return NotFound(new { message = "Автомобиль не найден" });
+            return NotFound(new { message = "Cae" });
         }
 
         [HttpDelete("{id}")]
@@ -135,10 +135,10 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(car);
                 _context.SaveChanges();
-                return Ok(new { message = "Автомобиль успешно удален" });
+                return Ok(new { message = "Car successfully deleted" });
             }
 
-            return NotFound(new { message = "Автомобиль не найден" });
+            return NotFound(new { message = "Car not found" });
         }
     }
 }

@@ -2,13 +2,10 @@ using System.Net.Mail;
 
 namespace AutoserviceBackCSharp.Validation
 {
-    public class Validator
+    public class UserFieldsValidator : Validator
     {
-        private static readonly PhoneNumbers.PhoneNumberUtil phoneNumberUtil;
-
-        static Validator()
+        public UserFieldsValidator() : base()
         {
-            phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
         }
 
         public bool ValidatePhone(string? phone)
