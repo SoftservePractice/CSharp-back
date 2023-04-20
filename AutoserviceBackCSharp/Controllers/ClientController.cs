@@ -36,7 +36,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (client == null)
             {
-                return NotFound(new { message = "Пользователь не найден" });
+                return NotFound(new { message = "Client has not found" });
             }
 
             return Ok(client);
@@ -49,12 +49,12 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (!validator.ValidatePhone(phone))
             {
-                return BadRequest("Номер телефона должен быть корректным");
+                return BadRequest("Invalid phone number field");
             }
 
             if (!validator.ValidateEmail(email))
             {
-                return BadRequest("Почта должна быть корректной");
+                return BadRequest("Invalid email field");
             }
 
             var client = new Client()
@@ -68,7 +68,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.Clients.Add(client);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(PostClient), new { client = client, message = "Пользователь успешно создан" });
+            return CreatedAtAction(nameof(PostClient), new { client = client, message = "Client has been successfully created" });
         }
 
         [HttpPatch("{id}")]
@@ -78,12 +78,12 @@ namespace AutoserviceBackCSharp.Controllers
             Validator validator = new Validator();
 
             if(!validator.ValidatePhone(phone)){
-                return BadRequest("Номер телефона должен быть корректным");
+                return BadRequest("Invalid phone number field");
             }
 
             if (!validator.ValidateEmail(email))
             {
-                return BadRequest("Почта должна быть корректной");
+                return BadRequest("Invalid email field");
             }
 
             if (client != null)
@@ -94,10 +94,10 @@ namespace AutoserviceBackCSharp.Controllers
                 client.TelegramId = telegramId ?? client.TelegramId;
                 client.IsConfirm = isConfirm ?? client.IsConfirm;
                 _context.SaveChanges();
-                return Ok(new { client = client, message = "Пользователь успешно обновлен" });
+                return Ok(new { client = client, message = "Client has been successfully updated" });
             }
 
-            return NotFound(new { message = "Пользователь не найден" });
+            return NotFound(new { message = "Client has not found" });
         }
 
         [HttpDelete("{id}")]
@@ -112,10 +112,10 @@ namespace AutoserviceBackCSharp.Controllers
                 client.Feedbacks.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(client);
                 _context.SaveChanges();
-                return Ok(new { message = "Пользователь успешно удален" });
+                return Ok(new { message = "Client has been successfully deleted" });
             }
 
-            return NotFound(new { message = "Пользователь не найден" });
+            return NotFound(new { message = "Client has not found" });
         }
     }
 }
