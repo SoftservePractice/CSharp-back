@@ -12,11 +12,11 @@ public partial class Work
     [Range(0, float.MaxValue, ErrorMessage = "Value must be non-negative")]
     public float? DetailPrice { get; set; }
 
-    [Required(ErrorMessage = "Не указана WorkPrice")]
+    [Required(ErrorMessage = "WorkPrice must be specified")]
     [Range(0, float.MaxValue, ErrorMessage = "Value must be non-negative")]
     public float WorkPrice { get; set; }
 
-    [Required(ErrorMessage = "Не указана Order")]
+    [Required(ErrorMessage = "Order must be specified")]
     [Range(0, int.MaxValue, ErrorMessage = "Value must be non-negative")]
     public virtual int Order { get; set; }
 

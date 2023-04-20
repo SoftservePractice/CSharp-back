@@ -7,16 +7,16 @@ public partial class Technician
 {
     public int Id { get; set; }
 
-    [Required(ErrorMessage = "Не указано имя техника")]
-    [StringLength(30, MinimumLength = 3, ErrorMessage = "Недопустимая длина имени")]
+    [Required(ErrorMessage = "Technician name must be specified")]
+    [StringLength(30, MinimumLength = 3, ErrorMessage = "Invalid technician name field length")]
     public string Name { get; set; } = null!;
 
-    [Required(ErrorMessage = "Не указан телефон техника")]
+    [Required(ErrorMessage = "Phone number must be specified")]
     [Phone]
     public string Phone { get; set; } = null!;
 
-    [Required(ErrorMessage = "Не указана специализация техника")]
-    [StringLength(40, MinimumLength = 3, ErrorMessage = "Недопустимая длина имени")]
+    [Required(ErrorMessage = "Specialization must be specified")]
+    [StringLength(40, MinimumLength = 3, ErrorMessage = "Invalid specialization field length")]
     public string Specialization { get; set; } = null!;
 
     public DateOnly StartWork { get; set; }

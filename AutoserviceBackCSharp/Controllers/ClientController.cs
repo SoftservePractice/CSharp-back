@@ -20,10 +20,10 @@ namespace AutoserviceBackCSharp.Controllers
         {
             var clients = _context.Clients.Where(
                 client =>
-                    (name == null || client.Name == name)
+                    (telegramId == null || client.TelegramId == telegramId)
+                    && (name == null || client.Name == name)
                     && (phone == null || client.Phone == phone)
                     && (email == null || client.Email == email)
-                    && (telegramId == null || client.TelegramId == telegramId)
             )!.ToArray();
 
             return Ok(clients);

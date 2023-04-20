@@ -15,12 +15,12 @@ public partial class Order
 
     public DateOnly? End { get; set; }
 
-    [Range(0, float.MaxValue, ErrorMessage = "Некорректное значение цены")]
+    [Range(0, float.MaxValue, ErrorMessage = "Invalid price field value")]
     public int? FinalPrice { get; set; }
 
     public int? Car { get; set; }
 
-    [Range(0, float.MaxValue, ErrorMessage = "Некорректное значение километража машины")]
+    [Range(0, float.MaxValue, ErrorMessage = "Invalid car mileage field value")]
     public int? CarMileage { get; set; }
 
     public DateOnly? AppointmentTime { get; set; }
