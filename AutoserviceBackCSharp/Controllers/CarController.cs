@@ -1,4 +1,6 @@
 using AutoserviceBackCSharp.Models;
+using AutoserviceBackCSharp.Validation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoserviceBackCSharp.Controllers
@@ -8,10 +10,12 @@ namespace AutoserviceBackCSharp.Controllers
     public class CarController : ControllerBase
     {
         private readonly PracticedbContext _context;
+        private readonly CarFieldsValidation carValidator;
 
         public CarController(PracticedbContext context)
         {
             _context = context;
+            carValidator = new CarFieldsValidation();
         }
 
         [HttpGet]
@@ -25,7 +29,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("{id}")]
         public ActionResult<Car> GetCar(int id)
         {
-            var car = _context.Cars.SingleOrDefault(car => car.Id == id)!;
+            var car = _context.Cars.FirstOrDefault(car => car.Id == id)!;
 
             if (car == null)
             {
@@ -37,30 +41,30 @@ namespace AutoserviceBackCSharp.Controllers
 
         [HttpPost]
         public ActionResult PostCar(string mark, DateTime year, string vin, string carNumber, int clientId)
-        {       
-            if (mark.Length < 3 || mark.Length > 30)
+        {
+            if (!carValidator.ValidateMark(mark))
             {
                 return BadRequest("Car mark incorrect");
             }
 
-            if (vin.Length < 3 || vin.Length > 30)
+            if (!carValidator.ValidateVinCode(vin))
             {
                 return BadRequest("Car Vin code incorrect");
             }
 
-            if (carNumber.Length < 3 || carNumber.Length > 20)
+            if (!carValidator.ValidateCarNumber(carNumber))
             {
                 return BadRequest("Car number incorrect");
             }
 
-            if (DateOnly.FromDateTime(year).Year < 1900 || DateOnly.FromDateTime(year).Year > DateTime.Now.Year)
+            if (!carValidator.ValidateYear(year))
             {
                 return BadRequest("Car manufacturing year incorrect");
             }
 
-            if (clientId != 0 && (_context.Clients.SingleOrDefault(client => client.Id == clientId) == null))
+            if (!carValidator.ValidateClientID(clientId,_context))
             {
-                return NotFound(new { message = "There is no user with this ID" });
+                return BadRequest("Client ID incorrect");
             }
 
             var car = new Car()
@@ -80,29 +84,29 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPatch("{id}")]
         public ActionResult<Car> UpdateCar(int id, string? mark, DateTime? year, string? vin, string? carNumber, int? clientId)
         {
-            if (mark!=null && (mark.Length < 3 || mark.Length > 30))
+            if (mark!=null && !carValidator.ValidateMark(mark))
             {
                 return BadRequest("Car mark incorrect");
             }
 
-            if (vin != null && (vin.Length < 3 || vin.Length > 30))
+            if (vin != null && !carValidator.ValidateVinCode(vin))
             {
                 return BadRequest("Car Vin code incorrect");
             }
 
-            if (carNumber != null && (carNumber.Length < 3 || carNumber.Length > 20))
+            if (carNumber != null && !carValidator.ValidateCarNumber(carNumber))
             {
                 return BadRequest("Car number incorrect");
             }
 
-            if (year != null && (DateOnly.FromDateTime(year.Value).Year < 1900 || DateOnly.FromDateTime(year.Value).Year > DateTime.Now.Year))
+            if (year != null && !carValidator.ValidateYear(year.Value))
             {
                 return BadRequest("Car manufacturing year incorrect");
             }
 
-            if (clientId != null && (_context.Clients.Where(client => client.Id == clientId).SingleOrDefault() == null))
+            if (clientId != null && !carValidator.ValidateClientID(clientId.Value, _context))
             {
-                return NotFound(new { message = "There is no user with this ID" });
+                return NotFound(new { message = "Client ID incorrect" });
             }
 
             var car = _context.Cars.SingleOrDefault(car => car.Id == id);
