@@ -29,7 +29,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (warehouse == null)
             {
-                return NotFound(new { message = "Склад не найден" });
+                return NotFound(new { message = "Warhouse not found" });
             }
 
             return Ok(warehouse);
@@ -40,18 +40,18 @@ namespace AutoserviceBackCSharp.Controllers
         {
             if (name != null && (name.Length > 32 || name.Length < 3))
             {
-                return BadRequest("Имя категории не может быть такой длинны");
+                return BadRequest("Incorrect name length");
             }
 
             if (adress != null && (adress.Length > 32 || adress.Length < 3))
             {
-                return BadRequest("Адресс категории не может быть такой длинны");
+                return BadRequest("Incorrect adress length");
             }
 
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
-            return Ok(new { warehouse = newWarehouse, message = "Склад успешно обновлен" }); ;
+            return Ok(new { warehouse = newWarehouse, message = "Warehouse updated successfully" }); ;
         }
 
         [HttpPatch("{id}")]
@@ -59,12 +59,12 @@ namespace AutoserviceBackCSharp.Controllers
         {
             if (name != null && (name.Length > 32 || name.Length < 3))
             {
-                return BadRequest("Имя категории не может быть такой длинны");
+                return BadRequest("Incorrect name length");
             }
 
             if (adress != null && (adress.Length > 32 || adress.Length < 3))
             {
-                return BadRequest("Адресс категории не может быть такой длинны");
+                return BadRequest("Incorrect adress length");
             }
 
             var updWarehouse = _context.Warehouses.SingleOrDefault(warehouse => warehouse.Id == id);
@@ -74,10 +74,10 @@ namespace AutoserviceBackCSharp.Controllers
                 updWarehouse.Address = adress ?? updWarehouse.Address;
                 updWarehouse.Name = name ?? updWarehouse.Name;
                 _context.SaveChanges();
-                return Ok(new { warehouse = updWarehouse, message = "Склад успешно обновлен" }); ;
+                return Ok(new { warehouse = updWarehouse, message = "Warehouse updated successfully" }); ;
             }
 
-            return BadRequest("Склад не найден");
+            return BadRequest("Warehouse not found");
         }
 
         [HttpDelete("{id}")]
@@ -90,10 +90,10 @@ namespace AutoserviceBackCSharp.Controllers
                 warehouse.DetailLists.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(warehouse);
                 _context.SaveChanges();
-                return Ok(new { message = "Склад успешно удален" });
+                return Ok(new { message = "Warehouse deleted successfully" });
             }
 
-            return NotFound(new { message = "Склад не найден" });
+            return NotFound(new { message = "Warehouse not found" });
         }
     }
 }
