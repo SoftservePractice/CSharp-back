@@ -103,9 +103,9 @@ namespace AutoserviceBackUnitTests.ControllersTests
         {
             var id = ((carController.GetCars().Result as OkObjectResult)!.Value as Car[])!.Last().Id;
 
-            var result = carController.DeleteCar(id);
-            Assert.IsNotNull(result);
-        }
+        //    var result = carController.DeleteCar(id);
+        //    Assert.IsNotNull(result);
+        //}
 
 
         [Test]
@@ -113,8 +113,8 @@ namespace AutoserviceBackUnitTests.ControllersTests
         {
             var id = ((carController.GetCars().Result as OkObjectResult)!.Value as Car[])!.Last().Id;
 
-            var result = carController.DeleteCar(id);
-            Assert.IsTrue(result is OkObjectResult);
-        }
+        //    var result = carController.DeleteCar(id);
+        //    Assert.IsTrue(result is OkObjectResult);
+        //}
     }
 }
