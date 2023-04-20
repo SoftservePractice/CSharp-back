@@ -49,7 +49,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         {
             string mark = "BMW";
             DateTime year = DateTime.Now;
-            string vin = random.Next(100000, 999999).ToString();
+            string vin = random.Next(100000000, 999999999).ToString() + random.Next(10000000, 99999999).ToString();
             string carNumber = random.Next(100000, 999999).ToString();
             int clientID = 2;
 
@@ -76,7 +76,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
             int id = 25;
             string mark = "BMW";
             DateTime year = DateTime.Now;
-            string vin = random.Next(100000, 999999).ToString();
+            string vin = random.Next(100000000, 999999999).ToString() + random.Next(10000000, 99999999).ToString();
             string carNumber = random.Next(100000, 999999).ToString();
             int clientID = 2;
 
