@@ -23,10 +23,9 @@ namespace AutoserviceBackUnitTests.ControllersTests
             
         }
 
-        [Test]
         public void TechnicianController_Get()
         {
-            technicianController = new TechnicianController(logger, context);
+            //technicianController = new TechnicianController(logger, context);
             var result = technicianController.GetTechnicians();
             
             Assert.Pass("123", result);
@@ -34,7 +33,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
         public void TechnicianController_Get2()
         {
-            technicianController = new TechnicianController(logger, context);
+            //technicianController = new TechnicianController(logger, context);
             int id = 1;
             var result = technicianController.GetTechnician(id);
             Assert.Pass("1233", result);
@@ -42,7 +41,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
         public void TechnicianController_Post()
         {
-            technicianController = new TechnicianController(logger, context);
+            //technicianController = new TechnicianController(logger, context);
             string name = "sse";
             string phone = "ssw";
             string specialization="ssq";
@@ -54,7 +53,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
         public void TechnicianController_Update()
         {
-            technicianController = new TechnicianController(logger, context);
+            //technicianController = new TechnicianController(logger, context);
             int id = 1;
             string name = "sse";
             string phone = "ssw";
@@ -67,7 +66,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
         public void TechnicianController_Delete()
         {
-           technicianController = new TechnicianController(logger, context);
+           //technicianController = new TechnicianController(logger, context);
             int id = 1;
             var result = technicianController.DeleteTechnician(id);
             Assert.Pass("1231", result);

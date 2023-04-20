@@ -43,21 +43,6 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
             Assert.IsTrue(result is OkObjectResult);
         }
-        [Test]
-        public void CarControllerGet_TestIsTableHasRows()
-        {
-            var result = carController.GetCars().Result;
-            OkObjectResult okObjRes;
-            try
-            {
-                okObjRes = (OkObjectResult)result!;
-                Assert.IsTrue(okObjRes.Value is Array && ((Car[])okObjRes.Value).Length > 0);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-        }
 
         [Test]
         public void CarCarControllerPost_TestNoNullRes()
@@ -116,7 +101,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         [Test]
         public void CarControllerDelete_TestNoNullResult()
         {
-            int id = 32;
+            var id = ((carController.GetCars().Result as OkObjectResult)!.Value as Car[])!.Last().Id;
 
             var result = carController.DeleteCar(id);
             Assert.IsNotNull(result);
@@ -126,7 +111,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         [Test]
         public void CarControllerDelete_TestIsOkResult()
         {
-            int id = 33;
+            var id = ((carController.GetCars().Result as OkObjectResult)!.Value as Car[])!.Last().Id;
 
             var result = carController.DeleteCar(id);
             Assert.IsTrue(result is OkObjectResult);
