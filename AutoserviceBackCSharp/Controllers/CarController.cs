@@ -10,12 +10,12 @@ namespace AutoserviceBackCSharp.Controllers
     public class CarController : ControllerBase
     {
         private readonly PracticedbContext _context;
-        private readonly CarFieldsValidation carValidator;
+        private readonly CarFieldsValidator carValidator;
 
         public CarController(PracticedbContext context)
         {
             _context = context;
-            carValidator = new CarFieldsValidation();
+            carValidator = new CarFieldsValidator();
         }
 
         [HttpGet]

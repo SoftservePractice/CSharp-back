@@ -4,7 +4,7 @@ using System.Net.Mail;
 
 namespace AutoserviceBackCSharp.Validation
 {
-    public class CarFieldsValidation : Validator
+    public class CarFieldsValidator : Validator
     {
         private readonly int minMarkLength = 3;
         private readonly int maxMarkLength = 30;
@@ -13,7 +13,7 @@ namespace AutoserviceBackCSharp.Validation
         private readonly int vinCodeLength = 17;
         private readonly int minCarMenufacturingYear = 1900;
 
-        public CarFieldsValidation() : base(){ }
+        public CarFieldsValidator() : base(){ }
 
         public bool ValidateMark(string mark)
         {
