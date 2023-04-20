@@ -4,7 +4,6 @@ namespace AutoserviceBackCSharp.Validation
 {
     public class UserFieldsValidator : Validator
     {
-
         public UserFieldsValidator() : base()
         {
         }
