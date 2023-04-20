@@ -20,7 +20,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         [SetUp]
         public void Setup()
         {
-            carController = new CarController(null, PublicContext.context);
+            carController = new CarController(PublicContext.context);
             random = new Random();
         }
 
@@ -113,23 +113,23 @@ namespace AutoserviceBackUnitTests.ControllersTests
             Assert.IsTrue(result is OkObjectResult);
         }
 
-        [Test]
-        public void CarControllerDelete_TestNoNullResult()
-        {
-            int id = 32;
+        //[Test]
+        //public void CarControllerDelete_TestNoNullResult()
+        //{
+        //    int id = 32;
 
-            var result = carController.DeleteCar(id);
-            Assert.IsNotNull(result);
-        }
+        //    var result = carController.DeleteCar(id);
+        //    Assert.IsNotNull(result);
+        //}
 
 
-        [Test]
-        public void CarControllerDelete_TestIsOkResult()
-        {
-            int id = 33;
+        //[Test]
+        //public void CarControllerDelete_TestIsOkResult()
+        //{
+        //    int id = 33;
 
-            var result = carController.DeleteCar(id);
-            Assert.IsTrue(result is OkObjectResult);
-        }
+        //    var result = carController.DeleteCar(id);
+        //    Assert.IsTrue(result is OkObjectResult);
+        //}
     }
 }

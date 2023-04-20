@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace AutoserviceBackCSharp.Models;
 
@@ -17,9 +15,12 @@ public partial class Detail
     public string CompatibleVehicles { get; set; } = null!;
 
     public int Category { get; set; }
+
     public virtual Category CategoryNavigation { get; set; } = null!;
+
     [JsonIgnore]
     public virtual ICollection<DetailList> DetailLists { get; } = new List<DetailList>();
+
     [JsonIgnore]
     public virtual ICollection<Work> Works { get; } = new List<Work>();
 }

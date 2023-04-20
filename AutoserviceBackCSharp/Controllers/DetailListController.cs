@@ -1,8 +1,5 @@
 using AutoserviceBackCSharp.Models;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Xml.Linq;
-using System.Text.RegularExpressions;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -10,20 +7,19 @@ namespace AutoserviceBackCSharp.Controllers
     [Route("[controller]")]
     public class DetailListController : ControllerBase
     {
-        private readonly ILogger<CarController> _logger;
         private readonly PracticedbContext _context;
 
-        public DetailListController(ILogger<CarController> logger, PracticedbContext context)
+        public DetailListController(PracticedbContext context)
         {
-            _logger = logger;
             _context = context;
         }
+
         [HttpGet]
         public ActionResult<DetailList> GetDetailLists(int? warId)
         {
             return Ok(_context.DetailLists.Where(
                 detailList =>
-                (warId == null || detailList.Warehouse == warId))!.ToArray());
+                warId == null || detailList.Warehouse == warId)!.ToArray());
         }
 
         [HttpGet("{id}")]
@@ -36,19 +32,27 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<DetailList> PostDetailList(int warehouseId, int detailId, int? count)
         {
             if (warehouseId < 0)
-                return BadRequest("ID склада не может быть меньше 0");
+            {
+                return BadRequest("Warehouse ID can't be less than 0");
+            }
 
             if (detailId < 0)
-                return BadRequest("ID детали не может быть меньше 0");
+            {
+                return BadRequest("Detail ID can't be less than 0");
+            }
 
             if (count != null && count < 0)
-                return BadRequest("Кол-во деталей не может быть меньше 0");
+            {
+                return BadRequest("Detail count can't be less than 0");
+            }
 
             var newDetailList = new DetailList { Warehouse = warehouseId, Detail = detailId };
+
             if (count.HasValue)
             {
                 newDetailList.Count = count.Value;
             }
+
             _context.DetailLists.Add(newDetailList);
             _context.SaveChanges();
             return newDetailList;
@@ -58,15 +62,22 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<DetailList> UpdateDetailList(int id, int? warehouseId, int? detailId, int? count)
         {
             if (warehouseId != null && warehouseId < 0)
-                return BadRequest("ID склада не может быть меньше 0");
+            {
+                return BadRequest("Warehouse ID can't be less than 0");
+            }
 
             if (detailId != null && detailId < 0)
-                return BadRequest("ID детали не может быть меньше 0");
+            {
+                return BadRequest("Detail ID can't be less than 0");
+            }
 
             if (count != null && count < 0)
-                return BadRequest("Кол-во деталей не может быть меньше 0");
+            {
+                return BadRequest("Detail count can't be less than 0");
+            }
 
             var updDetailList = _context.DetailLists.SingleOrDefault(detailList => detailList.Id == id);
+
             if (updDetailList != null)
             {
                 updDetailList.Warehouse = warehouseId ?? updDetailList.Warehouse;
@@ -75,6 +86,7 @@ namespace AutoserviceBackCSharp.Controllers
                 _context.SaveChanges();
                 return updDetailList;
             }
+
             return NotFound();
         }
 
@@ -87,10 +99,10 @@ namespace AutoserviceBackCSharp.Controllers
             {
                 _context.Remove(detailList);
                 _context.SaveChanges();
-                return Ok(new { message = "DetailList успешно ликвидирован" });
+                return Ok(new { message = "DetailList successfully deleted" });
             }
 
-            return NotFound(new { message = "DetailList не найден" }); ;
+            return NotFound(new { message = "DetailList not found" });
         }
     }
 }

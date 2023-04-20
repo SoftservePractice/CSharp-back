@@ -11,7 +11,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         [SetUp]
         public void Setup()
         {
-            carController = new CarController(null, PublicContext.context);
+            carController = new CarController(PublicContext.context);
         }
 
         

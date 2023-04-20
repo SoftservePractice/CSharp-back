@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace AutoserviceBackCSharp.Models;
 
@@ -11,6 +9,7 @@ public partial class Warehouse
     public string Address { get; set; } = null!;
 
     public string Name { get; set; } = null!;
+
     [JsonIgnore]
     public virtual ICollection<DetailList> DetailLists { get; } = new List<DetailList>();
 }
