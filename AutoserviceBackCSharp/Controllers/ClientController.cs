@@ -1,6 +1,7 @@
 using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
 using AutoserviceBackCSharp.Validation;
+using AutoserviceBackCSharp.Validation.ClientView;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -45,17 +46,20 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            UserFieldsValidator uservalidator = new UserFieldsValidator();
+            //UserFieldsValidator uservalidator = new UserFieldsValidator();
 
-            if (!uservalidator.ValidatePhone(phone))
-            {
-                return BadRequest("Invalid phone number field");
-            }
+            //if (!uservalidator.ValidatePhone(phone))
+            //{
+            //    return BadRequest("Invalid phone number field");
+            //}
 
-            if (!uservalidator.ValidateEmail(email))
-            {
-                return BadRequest("Invalid email field");
-            }
+            //if (!uservalidator.ValidateEmail(email))
+            //{
+            //    return BadRequest("Invalid email field");
+            //}
+
+            var clientModelValidator = new ClientModelValidator();
+            var result = clientModelValidator.Validate(new Client(phone, email, name));
 
             var client = new Client()
             {
@@ -68,6 +72,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.Clients.Add(client);
             _context.SaveChanges();
+
             return CreatedAtAction(nameof(PostClient), new { client = client, message = "Client has been successfully created" });
         }
 
