@@ -55,6 +55,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.DetailLists.Add(newDetailList);
             _context.SaveChanges();
+
             return newDetailList;
         }
 

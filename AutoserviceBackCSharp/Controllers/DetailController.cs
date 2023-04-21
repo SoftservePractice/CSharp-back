@@ -1,4 +1,5 @@
 using AutoserviceBackCSharp.Models;
+using AutoserviceBackCSharp.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoserviceBackCSharp.Controllers
@@ -9,10 +10,12 @@ namespace AutoserviceBackCSharp.Controllers
     public class DetailController : ControllerBase
     {
         private readonly PracticedbContext _context;
+        private readonly DetailFieldsValidator detailValidator;
 
         public DetailController(PracticedbContext context)
         {
             _context = context;
+            detailValidator = new DetailFieldsValidator();
         }
 
         [HttpGet]
@@ -33,7 +36,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             if (detail == null)
             {
-                return NotFound(new { message = "Detail не найден" });
+                return NotFound(new { message = "Detail not found" });
             }
 
             return Ok(detail);
@@ -42,24 +45,24 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostDetail(string model, string vendorCode, string description, string compatibleVehicles, int catId)
         {
-            if (model.Length < 3 || model.Length > 32)
+            if (!detailValidator.ValidateModel(model))
             {
-                return BadRequest("Модель некорректная");
+                return BadRequest("Model incorrect");
             }
 
-            if (vendorCode.Length < 3 || vendorCode.Length > 32)
+            if (!detailValidator.ValidateVendorCode(vendorCode))
             {
-                return BadRequest("Vendor код некорректный");
+                return BadRequest("Vendor code incorrect");
             }
 
-            if (description.Length < 3 || description.Length > 300)
+            if (!detailValidator.ValidateDescription(description))
             {
-                return BadRequest("Описание некорректное");
+                return BadRequest("Description incorrect");
             }
 
-            if (compatibleVehicles.Length < 3 || compatibleVehicles.Length > 300)
+            if (!detailValidator.ValidateCompatibleVehicles(compatibleVehicles))
             {
-                return BadRequest("Совместимые автомобили некорректны");
+                return BadRequest("Compatible Vehicles incorrect");
             }
 
             var detail = new Detail() { 
@@ -69,33 +72,33 @@ namespace AutoserviceBackCSharp.Controllers
                 CompatibleVehicles = compatibleVehicles,
                 Category = catId
             };
-
             _context.Details.Add(detail);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "Detail успешно создан" });
+
+            return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "Detail created successfully" });
         }
 
         [HttpPatch("{id}")]
         public ActionResult<Detail> UpdateDetail(int id, string? model, string? vendorCode, string? description, string? compatibleVehicles, int? catId)
         {
-            if (model != null && (model.Length < 3 || model.Length > 32))
+            if (model != null && !detailValidator.ValidateModel(model))
             {
-                return BadRequest("Модель некорректная");
+                return BadRequest("Model incorrect");
             }
 
-            if (vendorCode != null && (vendorCode.Length < 3 || vendorCode.Length > 32))
+            if (vendorCode != null && !detailValidator.ValidateVendorCode(vendorCode))
             {
-                return BadRequest("Vendor код некорректный");
+                return BadRequest("Vendor code incorrect");
             }
 
-            if (description != null && (description.Length < 3 || description.Length > 300))
+            if (description != null && !detailValidator.ValidateDescription(description))
             {
-                return BadRequest("Описание некорректное");
+                return BadRequest("Description incorrect");
             }
 
-            if (compatibleVehicles != null && (compatibleVehicles.Length < 3 || compatibleVehicles.Length > 300))
+            if (compatibleVehicles != null && !detailValidator.ValidateCompatibleVehicles(compatibleVehicles))
             {
-                return BadRequest("Совместимые автомобили некорректны");
+                return BadRequest("Compatible Vehicles incorrect");
             }
 
             var detail = _context.Details.SingleOrDefault(detail => detail.Id == id);
@@ -108,10 +111,10 @@ namespace AutoserviceBackCSharp.Controllers
                 detail.CompatibleVehicles = compatibleVehicles ?? detail.CompatibleVehicles;
                 detail.Category = catId ?? detail.Category;
                 _context.SaveChanges();
-                return Ok(new { message = "Detail успешно обновлены" });
+                return Ok(new { message = "Detail updated successfully" });
             }
 
-            return NotFound(new { message = "Detail не найдены" });
+            return NotFound(new { message = "Detail not found" });
         }
 
         [HttpDelete("{id}")]
@@ -125,10 +128,10 @@ namespace AutoserviceBackCSharp.Controllers
                 detail.DetailLists.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(detail);
                 _context.SaveChanges();
-                return Ok(new { message = "Detail успешно удален" });
+                return Ok(new { message = "Detail deleted successfully" });
             }
 
-            return NotFound(new { message = "Detail не найден" });
+            return NotFound(new { message = "Detail not found" });
         }
     }
 }

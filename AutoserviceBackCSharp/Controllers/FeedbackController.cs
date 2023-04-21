@@ -23,6 +23,7 @@ namespace AutoserviceBackCSharp.Controllers
                 && (content == null || feedbacks.Content == content)
                 && (order == null || feedbacks.Order == order)
                 )!.ToArray();
+
             return Ok(feedbacks);
         }
         [HttpGet("{id}")]
@@ -59,6 +60,7 @@ namespace AutoserviceBackCSharp.Controllers
             var feedback = new Feedback() { Client = client, Content = content, Order = order, Rating = rating };
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
+
             return Ok(new { feedback = feedback, message = "Отзыв успешно добавлен" });
         }
 

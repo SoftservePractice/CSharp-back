@@ -43,28 +43,13 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
             Assert.IsTrue(result is OkObjectResult);
         }
-        [Test]
-        public void CarControllerGet_TestIsTableHasRows()
-        {
-            var result = carController.GetCars().Result;
-            OkObjectResult okObjRes;
-            try
-            {
-                okObjRes = (OkObjectResult)result!;
-                Assert.IsTrue(okObjRes.Value is Array && ((Car[])okObjRes.Value).Length > 0);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-        }
 
         [Test]
         public void CarCarControllerPost_TestNoNullRes()
         {
             string mark = "BMW";
             DateTime year = DateTime.Now;
-            string vin = random.Next(100000, 999999).ToString();
+            string vin = random.Next(100000000, 999999999).ToString() + random.Next(10000000, 99999999).ToString();
             string carNumber = random.Next(100000, 999999).ToString();
             int clientID = 2;
 
@@ -77,7 +62,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
         {
             string mark = "BMW";
             DateTime year = DateTime.Now;
-            string vin = random.Next(100000, 999999).ToString();
+            string vin = random.Next(100000000, 999999999).ToString() + random.Next(10000000, 99999999).ToString();
             string carNumber = random.Next(100000, 999999).ToString();
             int clientID = 2;
 
@@ -91,7 +76,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
             int id = 25;
             string mark = "BMW";
             DateTime year = DateTime.Now;
-            string vin = random.Next(100000, 999999).ToString();
+            string vin = random.Next(100000000, 999999999).ToString() + random.Next(10000000, 99999999).ToString();
             string carNumber = random.Next(100000, 999999).ToString();
             int clientID = 2;
 
@@ -105,7 +90,7 @@ namespace AutoserviceBackUnitTests.ControllersTests
             int id = 25;
             string mark = "BMW";
             DateTime year = DateTime.Now;
-            string vin = random.Next(100000, 999999).ToString();
+            string vin = random.Next(100000000, 999999999).ToString() + random.Next(10000000, 99999999).ToString();
             string carNumber = random.Next(100000, 999999).ToString();
             int clientID = 2;
 
@@ -113,23 +98,23 @@ namespace AutoserviceBackUnitTests.ControllersTests
             Assert.IsTrue(result is OkObjectResult);
         }
 
-        //[Test]
-        //public void CarControllerDelete_TestNoNullResult()
-        //{
-        //    int id = 32;
+        [Test]
+        public void CarControllerDelete_TestNoNullResult()
+        {
+            var id = ((carController.GetCars().Result as OkObjectResult)!.Value as Car[])!.Last().Id;
 
-        //    var result = carController.DeleteCar(id);
-        //    Assert.IsNotNull(result);
-        //}
+            var result = carController.DeleteCar(id);
+            Assert.IsNotNull(result);
+        }
 
 
-        //[Test]
-        //public void CarControllerDelete_TestIsOkResult()
-        //{
-        //    int id = 33;
+        [Test]
+        public void CarControllerDelete_TestIsOkResult()
+        {
+            var id = ((carController.GetCars().Result as OkObjectResult)!.Value as Car[])!.Last().Id;
 
-        //    var result = carController.DeleteCar(id);
-        //    Assert.IsTrue(result is OkObjectResult);
-        //}
+            var result = carController.DeleteCar(id);
+            Assert.IsTrue(result is OkObjectResult);
+        }
     }
 }

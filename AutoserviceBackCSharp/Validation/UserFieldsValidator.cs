@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace AutoserviceBackCSharp.Validation
 {
@@ -6,6 +7,7 @@ namespace AutoserviceBackCSharp.Validation
     {
         public UserFieldsValidator() : base()
         {
+
         }
 
         public bool ValidatePhone(string? phone)
@@ -13,32 +15,25 @@ namespace AutoserviceBackCSharp.Validation
             if (phone == null)
                 return true;
 
-            try
+            Regex regex = new Regex(@"\D");
+
+            if (!regex.IsMatch(phone))
             {
                 var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
+
                 return phoneNumberUtil.IsValidNumber(phoneNumber);
             }
-            catch (Exception)
-            {
-                return false;
-            }
+
+            return false;
+
         }
-        
+
         public bool ValidateEmail(string? email)
         {
             if (email == null)
                 return true;
 
-            try
-            {
-                var emailAddress = new MailAddress(email);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
+            return MailAddress.TryCreate(email, out MailAddress mailAddress);
         }
     }
 }

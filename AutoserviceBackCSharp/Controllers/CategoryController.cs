@@ -46,6 +46,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.Categories.Add(category);
             _context.SaveChanges();
+
             return category;
         }
 
@@ -64,6 +65,7 @@ namespace AutoserviceBackCSharp.Controllers
                 updCategory.Name = name ?? updCategory.Name;
                 updCategory.ParentCategory = parentCategory ?? updCategory.ParentCategory;
                 _context.SaveChanges();
+
                 return Ok(new { updCategory = updCategory, message = "Категория успешно обновлена" });
             }
 
@@ -81,6 +83,7 @@ namespace AutoserviceBackCSharp.Controllers
                 category.InverseParentCategoryNavigation.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(category);
                 _context.SaveChanges();
+
                 return Ok(new { message = "Категория успешна удалена" });
             }
 
