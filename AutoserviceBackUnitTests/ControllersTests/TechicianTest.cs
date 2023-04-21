@@ -21,13 +21,13 @@ namespace AutoserviceBackUnitTests.ControllersTests
         {
             techController = new TechnicianController(PublicContext.context);
         }
-
+        [Test]
         public void TechnicianController_Get()
         {
             //technicianController = new TechnicianController(logger, context);
             Assert.DoesNotThrow(() => techController.GetTechnicians());
         }
-
+        [Test]
         public void TechnicianController_Get2()
         {
             var result = techController.GetTechnicians();
@@ -42,24 +42,25 @@ namespace AutoserviceBackUnitTests.ControllersTests
 
         //    Assert.IsTrue(result is OkObjectResult);
         //}
-
+        //[Test]
         //public void TechnicianController_Post()
         //{
         //    //technicianController = new TechnicianController(logger, context);
         //    string name = "sse";
-        //    string phone = "ssw";
-        //    string specialization="ssq";
+        //    string phone = "380959072724";
+        //    string specialization = "ssq";
         //    DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
         //    DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
-        //    var result = techController.PostTechnician(name,phone,specialization,start,end);
+        //    var result = techController.PostTechnician(name, phone, specialization, start, end);
         //    Assert.IsTrue((result as CreatedAtActionResult).StatusCode == (int)HttpStatusCode.Created);
         //}
 
+        //[Test]
         //public void TechnicianController_Post2()
         //{
         //    //technicianController = new TechnicianController(logger, context);
         //    string name = "sse";
-        //    string phone = "ssw";
+        //    string phone = "380959072724";
         //    string specialization = "ssq";
         //    DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
         //    DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
