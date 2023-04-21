@@ -2,6 +2,7 @@ using AutoserviceBackCSharp.Models;
 using Microsoft.AspNetCore.Mvc;
 using AutoserviceBackCSharp.Validation;
 using AutoserviceBackCSharp.Validation.ClientView;
+using AutoserviceBackCSharp.Validation.CustomError;
 
 namespace AutoserviceBackCSharp.Controllers
 {
@@ -62,7 +63,10 @@ namespace AutoserviceBackCSharp.Controllers
             var result = clientModelValidator.Validate(new ClientViewModel(name, phone, email));
             if (!result.IsValid)
             {
-                return BadRequest(new { Errors = result.Errors });
+                var OutputErrors = new List<ErrorDefault>();
+                result.Errors.ToList().ForEach(error => OutputErrors.Add(new ErrorDefault(error.PropertyName, error.ErrorMessage)));
+
+                return BadRequest(new { errors = OutputErrors });
             }
 
             var client = new Client()
