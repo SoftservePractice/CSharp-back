@@ -58,6 +58,7 @@ namespace AutoserviceBackCSharp.Controllers
             var workList = new WorkList() { Name = name, Description = description, Price = price, Duration = duration };
             _context.WorkLists.Add(workList);
             _context.SaveChanges();
+
             return workList;
         }
 
@@ -109,6 +110,7 @@ namespace AutoserviceBackCSharp.Controllers
                 worklist.Works.ToList().ForEach(x => _context.Remove(x));
                 _context.Remove(worklist);
                 _context.SaveChanges();
+
                 return Ok(new { message = "WorkList успешно ликвидирован" });
             }
 

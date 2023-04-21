@@ -66,7 +66,6 @@ namespace AutoserviceBackCSharp.Controllers
                 TelegramId = telegramId ?? null,
                 IsConfirm = false
             };
-
             _context.Clients.Add(client);
             _context.SaveChanges();
 
@@ -77,7 +76,6 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Client> UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
-            
             var clientModelValidator = new ClientModelValidator();
             var result = clientModelValidator.Validate(new ClientViewModel(name, phone, email));
 

@@ -71,6 +71,7 @@ namespace AutoserviceBackCSharp.Controllers
             var newWork = new Work() { Detail = detail, DetailPrice = detailPrice, WorkPrice = workPrice, Order = order, WorkList = work };
             _context.Works.Add(newWork);
             _context.SaveChanges();
+
             return CreatedAtAction(nameof(PostWork), new { newWork = newWork, message = "Work успешно созданa" }); ;
         }
 

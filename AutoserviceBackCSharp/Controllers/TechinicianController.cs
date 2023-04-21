@@ -25,7 +25,7 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpGet("{id}")]
         public ActionResult<Technician> GetTechnician(int id)
         {
-            var technician= _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
+            var technician = _context.Technicians.SingleOrDefault(techi => techi.Id == id)!;
 
             if (technician == null)
             {
@@ -38,12 +38,12 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostTechnician(string name, string phone, string specialization, DateTime? startWork, DateTime? startWorkInCompany)
         {
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 return BadRequest("Имя техника не может быть пустым");
             }
-            
-            if(string.IsNullOrWhiteSpace(specialization))
+
+            if (string.IsNullOrWhiteSpace(specialization))
             {
                 return BadRequest("Специализация техника не может быть пустым");
             }
@@ -68,20 +68,14 @@ namespace AutoserviceBackCSharp.Controllers
             }
 
             var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
-                try
-                {
-                    var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
-                    if (!phoneNumberUtil.IsValidNumber(phoneNumber))
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch (Exception)
-                {
-                    return BadRequest("Номер телефона должен быть корректным");
-                }
+            var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
 
-            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization= specialization };
+            if (!phoneNumberUtil.IsValidNumber(phoneNumber))
+            {
+                return BadRequest("Номер телефона должен быть корректным");
+            }
+
+            var newTechnician = new Technician() { Name = name, Phone = phone, Specialization = specialization };
 
             if (startWork.HasValue)
             {
@@ -95,6 +89,7 @@ namespace AutoserviceBackCSharp.Controllers
 
             _context.Technicians.Add(newTechnician);
             _context.SaveChanges();
+
             return CreatedAtAction(nameof(PostTechnician), new { newTechnician = newTechnician, message = "Техник успешно создан" });
         }
 
@@ -113,7 +108,7 @@ namespace AutoserviceBackCSharp.Controllers
                 return BadRequest("Специализация техника может содержать только буквы");
             }
 
-            if (name!=null&&(name.Length > 32 ||  name.Length < 3))
+            if (name != null && (name.Length > 32 || name.Length < 3))
             {
                 return BadRequest("Имя техника не может быть такой длинны");
             }
@@ -125,6 +120,7 @@ namespace AutoserviceBackCSharp.Controllers
             if (phone != null)
             {
                 var phoneNumberUtil = PhoneNumbers.PhoneNumberUtil.GetInstance();
+
                 try
                 {
                     var phoneNumber = phoneNumberUtil.Parse(phone, "UA");
@@ -155,12 +151,13 @@ namespace AutoserviceBackCSharp.Controllers
                 {
                     updTechnician.StartWorkInCompany = DateOnly.FromDateTime(startWorkInCompany.Value);
                 }
-                
+
                 _context.SaveChanges();
+
                 return Ok(new { updTechnician = updTechnician, message = "Техник успешно обновлен" });
             }
 
-            return NotFound(new { message = "Техник не найден" }); 
+            return NotFound(new { message = "Техник не найден" });
         }
 
         [HttpDelete("{id}")]
@@ -176,7 +173,7 @@ namespace AutoserviceBackCSharp.Controllers
                 return Ok(new { message = "Техник успешно ликвидирован" });
             }
 
-            return  NotFound(new { message = "Техник не найден" }); 
+            return NotFound(new { message = "Техник не найден" });
         }
     }
 }

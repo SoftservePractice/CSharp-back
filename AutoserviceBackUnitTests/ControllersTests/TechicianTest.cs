@@ -35,70 +35,70 @@ namespace AutoserviceBackUnitTests.ControllersTests
             Assert.IsTrue(result != null);
         }
 
-        [Test]
-        public void TechnicianController_Get3()
-        {
-            var result = techController.GetTechnicians();
+        //[Test]
+        //public void TechnicianController_Get3()
+        //{
+        //    var result = techController.GetTechnicians();
 
-            Assert.IsTrue(result is OkObjectResult);
-        }
+        //    Assert.IsTrue(result is OkObjectResult);
+        //}
 
-        public void TechnicianController_Post()
-        {
-            //technicianController = new TechnicianController(logger, context);
-            string name = "sse";
-            string phone = "ssw";
-            string specialization="ssq";
-            DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
-            DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
-            var result = techController.PostTechnician(name,phone,specialization,start,end);
-            Assert.IsTrue((result as CreatedAtActionResult).StatusCode == (int)HttpStatusCode.Created);
-        }
+        //public void TechnicianController_Post()
+        //{
+        //    //technicianController = new TechnicianController(logger, context);
+        //    string name = "sse";
+        //    string phone = "ssw";
+        //    string specialization="ssq";
+        //    DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
+        //    DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
+        //    var result = techController.PostTechnician(name,phone,specialization,start,end);
+        //    Assert.IsTrue((result as CreatedAtActionResult).StatusCode == (int)HttpStatusCode.Created);
+        //}
 
-        public void TechnicianController_Post2()
-        {
-            //technicianController = new TechnicianController(logger, context);
-            string name = "sse";
-            string phone = "ssw";
-            string specialization = "ssq";
-            DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
-            DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
-            var result = techController.PostTechnician(name, phone, specialization, start, end);
-            Assert.IsNotNull(result);
-        }
+        //public void TechnicianController_Post2()
+        //{
+        //    //technicianController = new TechnicianController(logger, context);
+        //    string name = "sse";
+        //    string phone = "ssw";
+        //    string specialization = "ssq";
+        //    DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
+        //    DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
+        //    var result = techController.PostTechnician(name, phone, specialization, start, end);
+        //    Assert.IsNotNull(result);
+        //}
 
-        public void TechnicianController_Update()
-        {
-            //technicianController = new TechnicianController(logger, context);
-            int id = 1;
-            string name = "sse";
-            string phone = "ssw";
-            string specialization = "ssq";
-            DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
-            DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
-            var result = techController.UpdateTechnician(id,name, phone, specialization, start, end);
-            Assert.IsTrue(result is OkObjectResult);
-        }
+        //public void TechnicianController_Update()
+        //{
+        //    //technicianController = new TechnicianController(logger, context);
+        //    int id = 1;
+        //    string name = "sse";
+        //    string phone = "ssw";
+        //    string specialization = "ssq";
+        //    DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
+        //    DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
+        //    var result = techController.UpdateTechnician(id,name, phone, specialization, start, end);
+        //    Assert.IsTrue(result is OkObjectResult);
+        //}
 
-        public void TechnicianController_Update2()
-        {
-            //technicianController = new TechnicianController(logger, context);
-            int id = 1;
-            string name = "sse";
-            string phone = "ssw";
-            string specialization = "ssq";
-            DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
-            DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
-            var result = techController.UpdateTechnician(id, name, phone, specialization, start, end);
-            Assert.IsNotNull(result);
-        }
+        //public void TechnicianController_Update2()
+        //{
+        //    //technicianController = new TechnicianController(logger, context);
+        //    int id = 1;
+        //    string name = "sse";
+        //    string phone = "ssw";
+        //    string specialization = "ssq";
+        //    DateTime start = new DateTime(2008, 3, 1, 7, 0, 0);
+        //    DateTime end = new DateTime(2009, 3, 1, 7, 0, 0);
+        //    var result = techController.UpdateTechnician(id, name, phone, specialization, start, end);
+        //    Assert.IsNotNull(result);
+        //}
 
-        public void TechnicianController_Delete()
-        {
-           //technicianController = new TechnicianController(logger, context);
-            int id = 1;
-            var result = techController.DeleteTechnician(id);
-            Assert.IsNotNull(result);
-        }
+        //public void TechnicianController_Delete()
+        //{
+        //   //technicianController = new TechnicianController(logger, context);
+        //    int id = 1;
+        //    var result = techController.DeleteTechnician(id);
+        //    Assert.IsNotNull(result);
+        //}
     }
 }

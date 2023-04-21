@@ -72,9 +72,9 @@ namespace AutoserviceBackCSharp.Controllers
                 CompatibleVehicles = compatibleVehicles,
                 Category = catId
             };
-
             _context.Details.Add(detail);
             _context.SaveChanges();
+
             return CreatedAtAction(nameof(PostDetail), new { detail = detail, message = "Detail created successfully" });
         }
 

@@ -51,6 +51,7 @@ namespace AutoserviceBackCSharp.Controllers
             var newWarehouse = new Warehouse() { Address = adress, Name = name};
             _context.Warehouses.Add(newWarehouse);
             _context.SaveChanges();
+
             return Ok(new { warehouse = newWarehouse, message = "Warehouse updated successfully" }); ;
         }
 
