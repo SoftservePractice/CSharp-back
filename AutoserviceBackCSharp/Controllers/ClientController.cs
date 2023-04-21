@@ -59,7 +59,11 @@ namespace AutoserviceBackCSharp.Controllers
             //}
 
             var clientModelValidator = new ClientModelValidator();
-            var result = clientModelValidator.Validate(new Client(phone, email, name));
+            var result = clientModelValidator.Validate(new ClientViewModel(name, phone, email));
+            if (!result.IsValid)
+            {
+                return BadRequest(new { Errors = result.Errors });
+            }
 
             var client = new Client()
             {

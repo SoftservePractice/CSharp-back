@@ -3,7 +3,7 @@ using AutoserviceBackCSharp.Models;
 
 namespace AutoserviceBackCSharp.Validation.ClientView
 {
-    public class ClientModelValidator : AbstractValidator<Client>
+    public class ClientModelValidator : AbstractValidator<ClientViewModel>
     {
         public ClientModelValidator()
         {
