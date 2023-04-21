@@ -47,20 +47,9 @@ namespace AutoserviceBackCSharp.Controllers
         [HttpPost]
         public ActionResult PostClient(string? name, string? phone, string? email, string? telegramId)
         {
-            //UserFieldsValidator uservalidator = new UserFieldsValidator();
-
-            //if (!uservalidator.ValidatePhone(phone))
-            //{
-            //    return BadRequest("Invalid phone number field");
-            //}
-
-            //if (!uservalidator.ValidateEmail(email))
-            //{
-            //    return BadRequest("Invalid email field");
-            //}
-
             var clientModelValidator = new ClientModelValidator();
             var result = clientModelValidator.Validate(new ClientViewModel(name, phone, email));
+
             if (!result.IsValid)
             {
                 var OutputErrors = new List<ErrorDefault>();
@@ -88,15 +77,16 @@ namespace AutoserviceBackCSharp.Controllers
         public ActionResult<Client> UpdateClient(int id, string? name, string? phone, string? email, string? telegramId, bool? isConfirm)
         {
             var client = _context.Clients.SingleOrDefault(client => client.Id == id);
-            UserFieldsValidator uservalidator = new UserFieldsValidator();
+            
+            var clientModelValidator = new ClientModelValidator();
+            var result = clientModelValidator.Validate(new ClientViewModel(name, phone, email));
 
-            if(!uservalidator.ValidatePhone(phone)){
-                return BadRequest("Invalid phone number field");
-            }
-
-            if (!uservalidator.ValidateEmail(email))
+            if (!result.IsValid)
             {
-                return BadRequest("Invalid email field");
+                var OutputErrors = new List<ErrorDefault>();
+                result.Errors.ToList().ForEach(error => OutputErrors.Add(new ErrorDefault(error.PropertyName, error.ErrorMessage)));
+
+                return BadRequest(new { errors = OutputErrors });
             }
 
             if (client != null)
